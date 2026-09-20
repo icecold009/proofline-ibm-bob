@@ -1,0 +1,20 @@
+{
+  "scenario": "local-pass",
+  "claims": [
+    {
+      "id": "claim-local-tests",
+      "title": "The local report generator passes its contract tests",
+      "evidence_class": "local",
+      "status": "proven",
+      "evidence_refs": ["check-local-contracts"]
+    }
+  ],
+  "checks": [
+    {
+      "id": "check-local-contracts",
+      "result": "pass",
+      "evidence_class": "local",
+      "source": "synthetic fixture"
+    }
+  ]
+}

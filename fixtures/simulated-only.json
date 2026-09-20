@@ -1,0 +1,21 @@
+{
+  "scenario": "simulated-only",
+  "claims": [
+    {
+      "id": "claim-simulated-alerts",
+      "title": "Critical alerts are available in the demo",
+      "evidence_class": "hosted",
+      "status": "simulated",
+      "evidence_refs": ["fixture-simulated-telemetry"],
+      "limitation": "Synthetic telemetry is not hosted production telemetry."
+    }
+  ],
+  "checks": [
+    {
+      "id": "fixture-simulated-telemetry",
+      "result": "fixture",
+      "evidence_class": "local",
+      "source": "synthetic fixture"
+    }
+  ]
+}

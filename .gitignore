@@ -1,0 +1,31 @@
+# Local environments
+.env
+.env.*
+!.env.example
+.venv/
+venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+
+# Frontend and build output
+node_modules/
+dist/
+build/
+.vite/
+
+# Local tool state
+.idea/
+.vscode/
+.DS_Store
+*.log
+
+# Evidence that must never be committed
+secrets/
+private-data/
+local-reports/
+
+# Keep Bob evidence, but do not permit accidental credential files.
+bob_sessions/*.env
+bob_sessions/*token*
+bob_sessions/*secret*

@@ -1,0 +1,14 @@
+{
+  "scenario": "hosted-unverified",
+  "claims": [
+    {
+      "id": "claim-provider-sync",
+      "title": "Provider-backed synchronization is live",
+      "evidence_class": "provider",
+      "status": "unverified",
+      "evidence_refs": [],
+      "limitation": "No provider response or hosted verification was supplied."
+    }
+  ],
+  "checks": []
+}
