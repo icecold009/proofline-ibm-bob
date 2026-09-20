@@ -26,6 +26,25 @@ event window.
 - Run only explicitly allowlisted local checks.
 - Export a Markdown and JSON evidence brief.
 
+## Local verification
+
+The current foundation includes a dependency-free deterministic core:
+
+```powershell
+python scripts/verify.py
+```
+
+To render a fixture report:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m proofline fixtures/simulated-only.json --format markdown
+```
+
+The implementation intentionally stops before the safe check registry and UI.
+Those are planned Bob-owned milestones so the official build visibly uses IBM
+Bob as a core component.
+
 ## Repository map
 
 - AGENTS.md — project rules for humans and IBM Bob.
@@ -36,8 +55,8 @@ event window.
 - docs/demo-narrative.md — submission and demo story.
 - docs/hackathon-build/ — scope, PRD, spec, checklist, and decision journal.
 - fixtures/ — synthetic, non-sensitive demo inputs.
-- src/ — implementation boundary; intentionally empty before Bob access.
-- tests/ — verification boundary.
+- src/ — dependency-free manifest validator, evidence engine, and renderers.
+- tests/ — deterministic foundation verification.
 - bob_sessions/ — exported Bob task histories and redacted screenshots.
 
 ## Current status

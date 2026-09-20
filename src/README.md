@@ -1,12 +1,9 @@
 # Source boundary
 
-The core implementation starts during the official build window with IBM Bob
-available. Keep production code behind the contracts in docs/hackathon-build.
+The dependency-free deterministic ledger lives in `src/proofline/`. It
+validates synthetic manifests and derives evidence statuses without commands,
+network access, or provider credentials.
 
-The first implementation should add:
-
-- strict input schemas;
-- a code-owned check registry;
-- deterministic status calculation;
-- JSON and Markdown export;
-- a read-only report view.
+The Bob build should extend this foundation with the safe check registry,
+read-only UI, review pass, and exported Bob task evidence. Do not add arbitrary
+command execution or live provider claims without updating the specification.

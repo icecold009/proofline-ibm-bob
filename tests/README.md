@@ -1,12 +1,12 @@
 # Test boundary
 
-Tests must cover:
+The dependency-free suite covers schema validation, evidence status
+calculation, deterministic report IDs, and the three synthetic demo scenarios.
+Run it with:
 
-- valid and invalid manifests;
-- unknown evidence classes;
-- oversized inputs;
-- unknown check IDs;
-- command-injection-shaped input;
-- simulation never upgrading to hosted or provider proof;
-- deterministic output for the same fixture;
-- redaction of secrets and sensitive paths.
+```powershell
+python scripts/verify.py
+```
+
+Bob should add safe check-registry, UI, and security-review coverage during the
+official build.

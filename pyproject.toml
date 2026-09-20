@@ -1,0 +1,9 @@
+[project]
+name = "proofline"
+version = "0.1.0"
+description = "Deterministic evidence reports for AI release claims."
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.unittest]
+testpaths = ["tests"]

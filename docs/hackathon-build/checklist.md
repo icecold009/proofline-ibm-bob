@@ -26,7 +26,7 @@
   evidence workflow without private context.
   Verify: Read the files from a clean checkout.
 
-- [ ] **3. Prepare synthetic fixtures**
+- [x] **3. Prepare synthetic fixtures**
   Spec ref: spec.md > Claim record
   What to build: Keep local-pass, simulated-only, and hosted-unverified
   scenarios in fixtures/.
@@ -34,7 +34,7 @@
   or live provider responses.
   Verify: Inspect fixture contents and run a secret-pattern scan.
 
-- [ ] **4. Lock the product contract**
+- [x] **4. Lock the product contract**
   Spec ref: spec.md > Report contract
   What to build: Confirm the MVP, cut list, status vocabulary, and export
   contract.
@@ -50,7 +50,7 @@
   Acceptance: The task history shows repository context and no blind edits.
   Verify: Export the task history and summary screenshot.
 
-- [ ] **6. Implement schema validation**
+- [x] **6. Implement schema validation**
   Spec ref: spec.md > Claim record
   What to build: Validate claim and evidence manifests with strict schemas and
   size limits.
@@ -65,7 +65,7 @@
   commands.
   Verify: Run injection-shaped negative tests.
 
-- [ ] **8. Implement deterministic report calculation**
+- [x] **8. Implement deterministic report calculation**
   Spec ref: spec.md > Report contract
   What to build: Derive statuses, limitations, summaries, and next actions.
   Acceptance: Simulation never becomes hosted or provider proof.
