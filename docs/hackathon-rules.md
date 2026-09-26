@@ -82,9 +82,10 @@ private paths from Bob history and screenshots before placing them in the repo.
   later submission steps.
 - Upload size limits and accepted URL formats were not visible on the first
   form step; check them in the form before uploading.
-- Confirm every relevant Bob task history and summary screenshot is present
-  and redacted before the repository becomes public.
-- Public repository access, public demo, and video are not yet verified.
+- The redacted Bob task history and summary screenshot are included in the
+  public repository.
+- GitHub reports the repository as public, with `main` as the default branch.
+  The public demo and video are not yet available.
 
-Do not claim a public demo, public GitHub publication, or submission until its
-corresponding artifact exists and has been checked.
+Do not claim a public demo or completed submission until its corresponding
+artifact exists and has been checked.

@@ -89,9 +89,10 @@ The declaration registry, bounded local check runner, deterministic report
 calculation, and offline HTML report are implemented. The report was reviewed
 in a browser during this project. A seven-slide editable pitch deck and PDF
 export are in `docs/submission/`. The Bob task-history Markdown and its
-consumption-summary screenshot are in `bob_sessions/`. The repository is
-currently private; public repository release, an online demo, and the
-event-specific video remain pending. The project uses the MIT License.
+consumption-summary screenshot are in `bob_sessions/`. The GitHub repository is
+public, with `main` as the default branch; the release branches point to the
+same commit. The online demo and event-specific video remain pending. The
+project uses the MIT License.
 
 Use a feature branch for changes. Never commit credentials, private data, or
 Bob exports that have not been redacted.

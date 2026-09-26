@@ -22,14 +22,14 @@ submitted.
   `docs/submission/`; slide renders were visually inspected after export.
 - Bob's role/evidence: the redacted task-history Markdown and consumption-summary
   screenshot for the combined Bob task are in `bob_sessions/`. The screenshot
-  records 36.50 Bobcoins. Complete a final whole-repository evidence review
-  before making the repository public.
+  records 36.50 Bobcoins. The repository was reviewed before public release.
 - Lablab dashboard: account status showed Approved; the team has one member,
   and the event allows solo participation. The submission draft is in progress;
   the opened form showed 0% completion.
-- Publication state: the connected GitHub repository currently displays as
-  Private. The local working changes have not been published. No live demo URL
-  or event video exists in the repository.
+- Publication state: GitHub reports the repository as Public, with `main` as
+  the default branch. `main`, `codex/prebob-scaffold`, and
+  `codex/ibm-bob-foundation` point to release commit `3ef9a75`. No live demo URL
+  or event video exists yet.
 - Licensing: MIT is declared in the root `LICENSE` and `pyproject.toml` to meet
   the event's stated MIT-compliance requirement.
 - Event video limit: maximum 3 minutes, with at least 90 seconds demonstrating
@@ -59,20 +59,19 @@ Open the three generated HTML files in a browser. The demo script is
 3. Record the MP4 presentation (maximum 3 minutes; at least 90 seconds showing
    the solution in action). Review the cover image and PDF deck against the
    final demo before upload.
-4. Resolve the private-repository blocker and choose a hosting platform. Publish
-   the reviewed feature branch, then verify the repository and online prototype
-   from signed-out browser sessions. Record their real URLs.
+4. Choose a hosting platform and deploy the working online prototype. Verify its
+   URL from a signed-out browser session and record the real platform and URL.
 5. Complete and submit the dashboard form before September 27, 2026, 20:30
    India Standard Time (15:00 UTC), after confirming the live dashboard still
    shows that deadline.
 
 ## Submission copy and limits
 
-The copy draft is in `docs/submission-draft.md` and now reflects the event form's
+The copy draft is in `docs/submission-draft.md` and reflects the event form's
 observed text limits and video requirement. It leaves categories, technology
-tags, video, public repository access, demo platform, and demo URL pending.
-Proofline is a local prototype today; the current repository does not establish
-deployment, public access, or submission.
+tags, video, demo platform, and demo URL pending. The repository is public, but
+Proofline is still a local prototype; public access does not establish a demo
+deployment or submission.
 
 ## Repository state
 

@@ -34,7 +34,7 @@
   files; no hosted, provider, or production environment was assessed.
 - The user reviewed the three generated HTML previews and confirmed the layout,
   statuses, content, and export controls.
-- Public demo, public repository publication, and submission video remain
-  pending. The deck, cover, and redacted Bob task export are prepared. The
-  project declares the MIT License. See `docs/submission-draft.md` and
-  `docs/hackathon-build/handoff.md`.
+- Public demo and submission video remain pending. The GitHub repository is
+  public with `main` as default. The deck, cover, and redacted Bob task export
+  are prepared. The project declares the MIT License. See
+  `docs/submission-draft.md` and `docs/hackathon-build/handoff.md`.

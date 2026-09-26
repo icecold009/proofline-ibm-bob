@@ -1,9 +1,8 @@
 # Lablab submission draft
 
 This is a copy-ready content draft, not a submitted entry. The signed-in event
-form and event page were checked on 2026-09-26. Do not publish until the
-remaining items below have real values and all repository evidence passes a
-final redaction review.
+form and event page were checked on 2026-09-26. The code repository is now
+public; the live demo and video remain outstanding.
 
 ## Project information
 
@@ -46,15 +45,16 @@ Draft: IBM Bob, Python, HTML. Confirm each exact available tag in the required T
   `docs/demo-narrative.md` and visibly demonstrate IBM Bob's role.
 - Slide deck (PDF): **Prepared** — `docs/submission/proofline-pitch.pdf`. The
   editable PowerPoint source is `docs/submission/proofline-pitch.pptx`.
-- Public GitHub repository: **Pending** — the repo is private until the
-  reviewed release branch is pushed and public visibility is verified.
+- Public GitHub repository: **Ready** —
+  https://github.com/icecold009/proofline-ibm-bob (GitHub reports Public;
+  `main` is the default branch).
 - Demo platform: **Pending** — deploy a working online prototype and confirm the
   hosting platform.
 - Demo URL: **Pending** — verify it from a signed-out browser.
 - IBM Bob task evidence: **Prepared locally** —
   `bob_sessions/proofline-session-2026-09-26.md` and
-  `bob_sessions/proofline-session-2026-09-26-summary.png`; complete a final
-  redaction review before public release.
+  `bob_sessions/proofline-session-2026-09-26-summary.png`; included in the
+  public repository after redaction review.
 - Additional information: use the long description above; adapt only to actual
   form requirements.
 
@@ -64,11 +64,11 @@ Draft: IBM Bob, Python, HTML. Confirm each exact available tag in the required T
   allowed. The submission draft is in progress and the opened form showed 0%.
 - Confirm exact category and technology tag choices, plus later-step upload
   limits and accepted URL formats.
-- Verify the public repository from a clean, signed-out browser and the demo URL
-  from an external session.
-- Verify that all relevant Bob task-history Markdown exports and summary
-  screenshots are present in `bob_sessions`; remove credentials, tokens,
-  personal data, and private paths before publication.
+- Verify the demo URL from an external session; GitHub currently reports the
+  repository as public with `main` as the default branch.
+- Confirm all relevant Bob task-history Markdown exports and summary screenshots
+  are present in `bob_sessions`; keep credentials, personal data, and private
+  paths out of future updates.
 - Confirm that video, PDF deck, cover image, public repository, and live demo all
   open and correspond to the same final project version.
 - License: **MIT** — `LICENSE` and the `pyproject.toml` SPDX declaration are

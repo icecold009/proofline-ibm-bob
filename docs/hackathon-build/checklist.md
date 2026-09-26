@@ -145,8 +145,8 @@
   What to build: Prepare README setup, demo URL, screenshots, video, deck,
   limitations, and redacted bob_sessions exports. Copy draft, editable deck,
   PDF, and cover image are prepared in docs/submission-draft.md and
-  docs/submission/; Bob evidence is present. Public repository access, demo URL,
-  and video remain pending; MIT licensing is declared.
+  docs/submission/; Bob evidence is present. Public repository access is
+  verified; demo URL and video remain pending; MIT licensing is declared.
   Acceptance: A reviewer can run the project and understand Bob's role; the
   required public URL, video, form fields, and evidence are complete.
   Verify: Event form requires title (5–50 characters), short description
@@ -154,9 +154,9 @@
   each, no more than 500 words), categories, technologies, public repository,
   Bob summary screenshots, demo platform and URL, cover image, MP4 video
   (3-minute maximum with at least 90 seconds of solution action), and PDF deck.
-  Copy draft is updated. Bob evidence is present. Repository is currently
-  private; demo URL and video are pending. MIT is declared in the root license
-  and package metadata.
+  Copy draft is updated. Bob evidence is present. GitHub reports the repository
+  as public with `main` as default; demo URL and video are pending. MIT is
+  declared in the root license and package metadata.
 
 - [ ] **12. Prepare the final handoff**
   Spec ref: prd.md > Submission proof points
