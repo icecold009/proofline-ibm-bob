@@ -7,7 +7,8 @@ import json
 from dataclasses import asdict
 from typing import Any
 
-from .model import Claim, Manifest
+from .model import Check, Claim, Manifest
+from .registry import lookup
 
 
 def _canonical_manifest(manifest: Manifest) -> str:
@@ -79,7 +80,24 @@ def _claim_result(claim: Claim, checks_by_id: dict[str, Any]) -> dict[str, Any]:
 def analyze_manifest(manifest: Manifest, *, generated_at: str | None = None) -> dict[str, Any]:
     """Calculate a stable report without commands, network access, or providers."""
 
-    checks_by_id = {check.id: check for check in manifest.checks}
+    # Build a normalized check list without mutating the frozen manifest.
+    # Any check whose ID is absent from the static registry has its result
+    # overridden to "blocked" regardless of the value supplied in the manifest.
+    # The manifest itself is accepted (registry membership is not a validation
+    # concern); this override happens here, before claims are evaluated.
+    normalized_checks: list[Check] = [
+        check
+        if lookup(check.id) is not None
+        else Check(
+            id=check.id,
+            result="blocked",
+            evidence_class=check.evidence_class,
+            source=check.source,
+        )
+        for check in manifest.checks
+    ]
+
+    checks_by_id = {check.id: check for check in normalized_checks}
     claims = [_claim_result(claim, checks_by_id) for claim in manifest.claims]
     statuses = {status: 0 for status in ("proven", "conditional", "simulated", "unverified", "blocked")}
     for claim in claims:
@@ -99,12 +117,13 @@ def analyze_manifest(manifest: Manifest, *, generated_at: str | None = None) -> 
                 "evidence_class": check.evidence_class,
                 "source": check.source,
             }
-            for check in manifest.checks
+            for check in normalized_checks
         ],
         "summary": statuses,
         "limitations": sorted({claim["limitation"] for claim in claims}),
         "security_notes": [
-            "No commands were executed.",
+            "Check IDs are resolved against the static code-owned registry; "
+            "no commands were executed.",
             "No network or provider access was used.",
             "Claim-supplied status values are not trusted; statuses are derived from evidence.",
         ],

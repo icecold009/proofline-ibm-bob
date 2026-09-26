@@ -2,6 +2,7 @@
 name = "proofline"
 version = "0.1.0"
 description = "Deterministic evidence reports for AI release claims."
+license = "MIT"
 requires-python = ">=3.11"
 dependencies = []
 

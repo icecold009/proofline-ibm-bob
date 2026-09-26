@@ -31,6 +31,24 @@ code-owned and never constructed from user input. Each check declares:
 - evidence class;
 - failure status.
 
+### Registry milestones
+
+**Declaration milestone (complete):** defines the static, code-owned registry
+with `CheckDefinition` metadata and `OperationKind` symbolic constants. Unknown
+check IDs are blocked at engine time — any check whose ID is absent from the
+registry has its result overridden to `"blocked"` before claims are evaluated.
+No operations are invoked, no commands are executed, and no shell strings are
+constructed.
+
+**Execution milestone (complete):** wires each `OperationKind` to a bounded
+safe invocation via `run_check(check_id, repo_root=...)` in `runner.py`.
+`RUN_LOCAL_CONTRACTS` uses a fixed argv (`[sys.executable, scripts/verify.py]`),
+`shell=False`, `capture_output=True`, registry timeout, registry working
+directory, and only explicitly allowed environment variables (no full env
+inheritance). `FIXTURE_EVIDENCE` returns `"fixture"` deterministically without
+starting any process. Unknown IDs are blocked before any dispatch. Output is
+discarded and never surfaced in reports. See checklist item 7A.
+
 ## Report contract
 
 Every report contains:
