@@ -1,0 +1,13 @@
+/.git
+/.pytest_cache
+__pycache__
+**/__pycache__
+/docs
+/bob_sessions
+/scripts
+/tests
+/*.md
+/AGENTS.md
+/SECURITY.md
+/LICENSE
+/pyproject.toml

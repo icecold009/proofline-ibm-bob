@@ -23,14 +23,21 @@ check required.
 
 ## MVP acceptance boundary
 
-- Input one change request or Git diff.
-- Load one small evidence manifest.
+- Enter one bounded change request or short diff summary.
+- Load or edit one small evidence manifest through the loopback browser UI or CLI.
 - Classify claims into six evidence classes.
 - Show explicit statuses: proven, conditional, simulated, unverified, or
   blocked.
-- Run only allowlisted local checks.
+- Treat manifest-declared results as conditional; mark a local result proven
+  only when the explicit allowlisted runner observed it pass in the claim's
+  declared evidence class.
+- Run only allowlisted local checks through an explicit CLI action.
 - Export JSON and Markdown.
 - Work fully with synthetic fixtures and no live provider dependency.
+
+The browser UI is loopback-only. It accepts bounded manifests, renders evidence
+details, and does not execute checks, persist submissions, or call external
+services.
 
 ## Explicit cuts
 

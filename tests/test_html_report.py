@@ -105,14 +105,15 @@ class HtmlStructureTests(unittest.TestCase):
     def test_claims_section_present(self):
         self.assertIn("Claims", self.html)
 
-    def test_security_notes_section_present(self):
-        self.assertIn("Security notes", self.html)
+    def test_method_and_limitations_section_present(self):
+        self.assertIn("Method and limitations", self.html)
 
     def test_export_section_present(self):
         self.assertIn("Export", self.html)
 
-    def test_footer_present(self):
-        self.assertIn("Made with IBM Bob", self.html)
+    def test_product_footer_present(self):
+        self.assertIn("<footer>Proofline", self.html)
+        self.assertNotIn("Made with IBM Bob", self.html)
 
     def test_no_external_resources(self):
         """No src=http/https, no href=http/https linking external assets."""
@@ -470,12 +471,12 @@ class GoldenFixtureHtmlTests(unittest.TestCase):
         self._check_fixture("hosted-unverified", "[UNVERIFIED]",
                             "Provider-backed synchronization")
 
-    def test_all_three_produce_html_with_security_notes(self):
+    def test_all_three_produce_html_with_method_notes(self):
         for name in ("local-pass", "simulated-only", "hosted-unverified"):
             report = _report(name)
             html = render_html(report)
-            self.assertIn("Security notes", html,
-                          f"Security notes section missing from {name}")
+            self.assertIn("Method and limitations", html,
+                          f"Method section missing from {name}")
 
 
 if __name__ == "__main__":

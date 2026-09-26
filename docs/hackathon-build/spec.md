@@ -9,6 +9,7 @@
 - status: derived status;
 - limitation: explicit explanation;
 - evidence_refs: references to check results or supplied artifacts.
+- change_request: optional bounded text describing the proposed change.
 
 ## Evidence item
 
@@ -18,6 +19,15 @@
 - observed_at: timestamp or fixture label;
 - redacted: boolean;
 - notes: limitation text.
+
+## Check provenance
+
+Manifest input may declare a result, evidence class, and source. The parser never
+accepts caller-supplied provenance or observation timestamps. Such results are
+reported as `manifest-declared`; a passing declaration is conditional. Only
+the explicit `run-report` CLI path can attach `runner-observed` provenance and
+an observation timestamp. Fixture markers remain simulated. The loopback web UI
+never executes checks and never persists uploaded manifests.
 
 ## Check registry
 

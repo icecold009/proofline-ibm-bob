@@ -110,24 +110,21 @@
   Acceptance: Simulation never becomes hosted or provider proof.
   Verify: Run all three golden fixtures twice and compare outputs.
 
-- [x] **9. Build the read-only report UI**
+- [x] **9. Build the read-only report UI and browser intake**
   Spec ref: spec.md > Report contract
-  What to build: Show claims, status, evidence class, limitations, and export
-  actions in one clear view. Implemented as render_html() in report.py,
-  exposed via --format html on the CLI.
-  Acceptance: A new viewer understands the result within 30 seconds.
-  Verify: Test the three fixtures in a clean browser.
-  Implementation status: Bob-implemented. python scripts/verify.py passed
-  (100 tests). HTML generation smoke tests passed for all three fixtures.
-  BROWSER VERIFICATION: Human reviewed all three previews in a clean browser
-  and confirmed the layout, status distinctions, and claim content. Copy and
-  download controls were confirmed working.
-  Preview files generated to temp directory for human review:
-    %TEMP%\proofline-local-pass.html
-    %TEMP%\proofline-simulated-only.html
-    %TEMP%\proofline-hosted-unverified.html
-  To regenerate: python -m proofline fixtures/<name>.json --format html
-    --output <path.html>  (set PYTHONPATH=src first)
+  What to build: Show a plain-language outcome, claim statuses, expandable
+  evidence provenance, limitations, next actions, and exports. Provide a
+  loopback-only guided single-claim intake and advanced bounded JSON manifest
+  intake.
+  Acceptance: A new viewer understands the result within 30 seconds; browser
+  intake never executes checks, saves manifests, or calls external services.
+  Verify: the bundled Python runtime ran `scripts/verify.py`; all 106 tests
+  passed, including loopback intake, registry options, and the no-check-execution
+  contract. Browser review covered all three scenarios, expected status changes,
+  evidence details, a 390px mobile layout, Markdown copy, and JSON download. No
+  horizontal overflow or console/page errors appeared.
+  Implementation status: Guided intake and advanced JSON mode are implemented
+  on codex/proofline-product-improvements and visually reviewed in a browser.
 
 - [x] **10. Run code review and security pass**
   Spec ref: spec.md > Future runtime boundary
@@ -136,9 +133,8 @@
   Acceptance: Review reports no security findings; command execution is
   allowlisted and bounded; report text preserves evidence limits.
   Verify: Codex Security diff scan completed with zero findings across six
-  changed source files. `python scripts/verify.py` passed 100 tests. The review
-  was sequential because delegated workers were unavailable; it did not assess
-  a hosted or production environment.
+  changed source files. The current local suite passes 106 tests. The scan did
+  not assess hosted or production behavior.
 
 - [ ] **11. Prepare the submission package**
   Spec ref: prd.md > Submission proof points
@@ -155,8 +151,10 @@
   Bob summary screenshots, demo platform and URL, cover image, MP4 video
   (3-minute maximum with at least 90 seconds of solution action), and PDF deck.
   Copy draft is updated. Bob evidence is present. GitHub reports the repository
-  as public with `main` as default; demo URL and video are pending. MIT is
-  declared in the root license and package metadata.
+  as public with `main` as default. The Lablab draft has the cover, PDF,
+  Developer Tools and Productivity categories, and the `Ibm` technology tag
+  saved. The required video, live demo URL, and final form fields remain
+  pending. MIT is declared in the root license and package metadata.
 
 - [ ] **12. Prepare the final handoff**
   Spec ref: prd.md > Submission proof points

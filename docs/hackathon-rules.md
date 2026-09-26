@@ -1,7 +1,7 @@
 # IBM Bob 2.0 Hackathon guidance
 
-Last checked: 2026-09-26 against the live event page, signed-in team dashboard,
-and submission form. Recheck the dashboard before submitting.
+Last checked: 2026-09-27 (India Standard Time) against the live event page and
+signed-in submission form. Recheck the dashboard before submitting.
 
 ## Current event facts
 
@@ -14,8 +14,10 @@ and submission form. Recheck the dashboard before submitting.
   before the kickoff stream to start building with Bob.
 - The event page currently shows submissions open and a close at September 27,
   2026, 20:30 India Standard Time (15:00 UTC).
-- The signed-in dashboard shows the account as Approved, a one-member team, and
-  a submission draft in progress. The submission form currently shows 0%.
+- The signed-in dashboard shows the account as Approved and a one-member team;
+  solo participation is allowed. The saved form shows Developer Tools and
+  Productivity categories, the `Ibm` technology tag, cover and PDF uploads, and
+  61% overall progress. The required video remains missing.
 - Solo participation is allowed; the one-member team is not itself a blocker.
 
 Sources:
@@ -78,12 +80,13 @@ private paths from Bob history and screenshots before placing them in the repo.
 
 - The account's Approved status and one-member team were observed in the
   dashboard; recheck eligibility if the dashboard changes.
-- The exact category/technology selections and any further fields shown on
-  later submission steps.
-- Upload size limits and accepted URL formats were not visible on the first
-  form step; check them in the form before uploading.
-- The redacted Bob task history and summary screenshot are included in the
-  public repository.
+- Any further fields shown on the final submission step; the required video
+  currently blocks navigation from media step 2.
+- Upload size limits for the remaining video and accepted URL formats for the
+  final step are not yet verified; inspect those fields before completing them.
+- The redacted combined-task Bob history and its summary screenshot are present
+  under `bob_sessions/` in the public repository; the user confirmed all
+  project prompts were within that one task.
 - GitHub reports the repository as public, with `main` as the default branch.
   The public demo and video are not yet available.
 

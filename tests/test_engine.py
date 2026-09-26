@@ -13,10 +13,11 @@ from proofline.report import render_markdown
 
 
 class ProoflineFixtureTests(unittest.TestCase):
-    def test_local_fixture_proves_local_claim(self) -> None:
+    def test_manifest_declared_local_pass_is_conditional(self) -> None:
         report = analyze_manifest(load_manifest(ROOT / "fixtures" / "local-pass.json"))
-        self.assertEqual(report["summary"]["proven"], 1)
-        self.assertEqual(report["claims"][0]["status"], "proven")
+        self.assertEqual(report["summary"]["conditional"], 1)
+        self.assertEqual(report["claims"][0]["status"], "conditional")
+        self.assertIn("did not run", report["claims"][0]["limitation"])
 
     def test_simulated_fixture_does_not_upgrade_to_hosted_proof(self) -> None:
         report = analyze_manifest(load_manifest(ROOT / "fixtures" / "simulated-only.json"))

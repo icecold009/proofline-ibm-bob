@@ -1,7 +1,7 @@
 # Proofline build handoff
 
-Updated: 2026-09-26. This records repository evidence and the remaining
-submission work; it does not claim that the project has been published or
+Updated: 2026-09-27 (India Standard Time). This records repository evidence
+and remaining submission work; it does not claim that the project has been
 submitted.
 
 ## Project and current evidence
@@ -9,26 +9,40 @@ submitted.
 - Product: local evidence classifier for release claims.
 - Current implementation: validated manifest, deterministic report
   calculation, static check registry, bounded local check runner, JSON/Markdown/
-  HTML reports, and synthetic demo fixtures.
-- Local verification: `python scripts/verify.py` — 100 tests passed.
+  HTML reports, loopback browser intake, and synthetic demo fixtures. The
+  browser intake never runs checks or persists manifests.
+- Current local verification: the bundled Python runtime ran
+  `scripts/verify.py`; all 106 tests passed. Python source and embedded
+  JavaScript syntax checks and `git diff --check` passed.
 - Security review: Codex Security diff scan `9a030a58-4d8c-44d6-b8bc-543a6e093e63`
   completed with zero findings across six changed source files. It was a
   sequential source review; it did not cover hosted, provider, or production
   behavior. The readable report is in the Codex Security scan artifact directory
   for this task.
-- Browser evidence: the user reviewed all three HTML previews and confirmed the
-  content, layout, status distinctions, and copy/download controls.
+- Browser evidence: the current loopback browser build was reviewed at desktop
+  and 390px mobile widths. All three synthetic scenarios showed their expected
+  states; the page had no horizontal overflow or console/page errors. Markdown
+  copy and JSON download were verified. This is local browser evidence, not a
+  public deployment check.
 - Pitch deck: seven-slide editable PowerPoint, PDF, and 16:9 cover image are in
   `docs/submission/`; slide renders were visually inspected after export.
-- Bob's role/evidence: the redacted task-history Markdown and consumption-summary
-  screenshot for the combined Bob task are in `bob_sessions/`. The screenshot
-  records 36.50 Bobcoins. The repository was reviewed before public release.
-- Lablab dashboard: account status showed Approved; the team has one member,
-  and the event allows solo participation. The submission draft is in progress;
-  the opened form showed 0% completion.
+- Bob's role/evidence: the combined project task contains the prompt history
+  and Bob's implementation, tests, and documentation work. Its redacted task
+  history and task-consumption-summary screenshot are in `bob_sessions/`. The
+  screenshot shows the task ID and 36.50 Bobcoins. A targeted scan of the
+  export found no Windows or Unix home paths, email addresses, common
+  credential assignments, or recognizable token shapes. The participant
+  confirmed all project prompts were in this one task; no other relevant Bob
+  task or team member is outstanding.
+- Lablab dashboard: account status showed Approved; the one-member team is
+  permitted to participate solo. The saved draft has Developer Tools and
+  Productivity categories, the `Ibm` technology tag, the cover image, and the
+  PDF deck. The media step shows 61% overall progress; the required video is
+  still missing, so the form has not advanced to step 3.
 - Publication state: GitHub reports the repository as Public, with `main` as
-  the default branch. `main`, `codex/prebob-scaffold`, and
-  `codex/ibm-bob-foundation` point to release commit `3ef9a75`. No live demo URL
+  the default branch. The release branches point to `8620493`. The
+  `codex/proofline-product-improvements` feature branch is checked out locally;
+  its implementation changes are uncommitted and not pushed. No live demo URL
   or event video exists yet.
 - Licensing: MIT is declared in the root `LICENSE` and `pyproject.toml` to meet
   the event's stated MIT-compliance requirement.
@@ -41,37 +55,40 @@ From the repository root in PowerShell:
 
 ```powershell
 $env:PYTHONPATH = "src"
-python scripts/verify.py
-python -m proofline fixtures/local-pass.json --format html --output proofline-local-pass.html
-python -m proofline fixtures/simulated-only.json --format html --output proofline-simulated-only.html
-python -m proofline fixtures/hosted-unverified.json --format html --output proofline-hosted-unverified.html
+python -m proofline web
 ```
 
-Open the three generated HTML files in a browser. The demo script is
+Open `http://127.0.0.1:8765`; select each synthetic example or load a bounded
+manifest. To explicitly run the referenced allowlisted checks for an observed
+report, run:
+
+```powershell
+python -m proofline run-report fixtures/local-pass.json --format html --output proofline-verified.html
+```
+
+The demo script is
 `docs/demo-narrative.md`.
 
 ## Remaining work, in order
 
-1. Complete a final redaction review of the genuine Bob task-history Markdown
-   and summary screenshot already in `bob_sessions/`.
-2. Confirm required category and technology tag selections and later-step
-   upload limits in the Lablab form; do not guess values.
-3. Record the MP4 presentation (maximum 3 minutes; at least 90 seconds showing
-   the solution in action). Review the cover image and PDF deck against the
-   final demo before upload.
-4. Choose a hosting platform and deploy the working online prototype. Verify its
-   URL from a signed-out browser session and record the real platform and URL.
-5. Complete and submit the dashboard form before September 27, 2026, 20:30
-   India Standard Time (15:00 UTC), after confirming the live dashboard still
-   shows that deadline.
+1. Deploy the working prototype to the authorized public preview host. Verify
+   the preview URL in a signed-out browser and record the actual platform and
+   URL; no Proofline deployment exists yet.
+2. Complete and save the remaining non-video submission fields when the form
+   allows them. The video field is required to leave media step 2; do not enter
+   a placeholder or try to bypass that validation.
+3. Record the event MP4 last (maximum 3 minutes, with at least 90 seconds
+   showing the solution in action), and upload it only after the demo URL,
+   project details, and other media have been checked.
+4. Review the saved draft and current event deadline. Do not press the final
+   Submit control without the participant's explicit instruction.
 
 ## Submission copy and limits
 
 The copy draft is in `docs/submission-draft.md` and reflects the event form's
-observed text limits and video requirement. It leaves categories, technology
-tags, video, demo platform, and demo URL pending. The repository is public, but
-Proofline is still a local prototype; public access does not establish a demo
-deployment or submission.
+observed text limits and current saved selections. The cover and PDF are saved
+in the form; the video and step-3 demo platform/URL remain pending. The public
+repository does not establish a demo deployment or a submitted entry.
 
 ## Repository state
 
