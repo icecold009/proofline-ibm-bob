@@ -1,8 +1,7 @@
 # Proofline build handoff
 
-Updated: 2026-09-27 (India Standard Time). This records repository evidence
-and remaining submission work; it does not claim that the project has been
-submitted.
+Updated: 2026-09-28 (India Standard Time). This records repository evidence
+and the completed public Lablab submission.
 
 ## Project and current evidence
 
@@ -22,10 +21,17 @@ submitted.
 - Browser evidence: the current loopback browser build was reviewed at desktop
   and 390px mobile widths. All three synthetic scenarios showed their expected
   states; the page had no horizontal overflow or console/page errors. Markdown
-  copy and JSON download were verified. This is local browser evidence, not a
-  public deployment check.
+  copy and JSON download were verified. The public Vercel deployment at
+  `https://proofline-ibm-g27i974jq-shaurya-s-projects11.vercel.app/` was also
+  opened and its synthetic conditional case reviewed. This does not establish
+  provider behavior or production readiness.
 - Pitch deck: seven-slide editable PowerPoint, PDF, and 16:9 cover image are in
-  `docs/submission/`; slide renders were visually inspected after export.
+  `docs/submission/`; slide renders were visually inspected after export. The
+  revised pitch deck and seven-slide text source are in the same directory.
+- Event video: `docs/submission/proofline-demo.mp4` is a captioned 178-second
+  1280×720 H.264 recording, visually checked at representative timestamps. It
+  shows the local app's synthetic cases and the redacted Bob summary image;
+  it does not claim those recorded interactions ran on the hosted deployment.
 - Bob's role/evidence: the combined project task contains the prompt history
   and Bob's implementation, tests, and documentation work. Its redacted task
   history and task-consumption-summary screenshot are in `bob_sessions/`. The
@@ -34,16 +40,16 @@ submitted.
   credential assignments, or recognizable token shapes. The participant
   confirmed all project prompts were in this one task; no other relevant Bob
   task or team member is outstanding.
-- Lablab dashboard: account status showed Approved; the one-member team is
-  permitted to participate solo. The saved draft has Developer Tools and
-  Productivity categories, the `Ibm` technology tag, the cover image, and the
-  PDF deck. The media step shows 61% overall progress; the required video is
-  still missing, so the form has not advanced to step 3.
+- Lablab submission: the public entry is
+  https://lablab.ai/ai-hackathons/ibm-bob-2-hackathon/lunar/proofline-evidence-before-release.
+  The entry page showed judging in progress when checked. It links the public
+  repository, Vercel demo, event video, and revised presentation. The signed-in
+  dashboard showed the account as Approved and a one-member team; solo entry is
+  allowed.
 - Publication state: GitHub reports the repository as Public, with `main` as
-  the default branch. The release branches point to `8620493`. The
-  `codex/proofline-product-improvements` feature branch is checked out locally;
-  its implementation changes are uncommitted and not pushed. No live demo URL
-  or event video exists yet.
+  the default branch. The `codex/proofline-product-improvements` feature branch
+  contains the submission package and status-document updates in PR #1, which
+  targets `main`.
 - Licensing: MIT is declared in the root `LICENSE` and `pyproject.toml` to meet
   the event's stated MIT-compliance requirement.
 - Event video limit: maximum 3 minutes, with at least 90 seconds demonstrating
@@ -69,30 +75,21 @@ python -m proofline run-report fixtures/local-pass.json --format html --output p
 The demo script is
 `docs/demo-narrative.md`.
 
-## Remaining work, in order
+## Submission status
 
-1. Deploy the working prototype to the authorized public preview host. Verify
-   the preview URL in a signed-out browser and record the actual platform and
-   URL; no Proofline deployment exists yet.
-2. Complete and save the remaining non-video submission fields when the form
-   allows them. The video field is required to leave media step 2; do not enter
-   a placeholder or try to bypass that validation.
-3. Record the event MP4 last (maximum 3 minutes, with at least 90 seconds
-   showing the solution in action), and upload it only after the demo URL,
-   project details, and other media have been checked.
-4. Review the saved draft and current event deadline. Do not press the final
-   Submit control without the participant's explicit instruction.
+The submission is complete and publicly available at
+https://lablab.ai/ai-hackathons/ibm-bob-2-hackathon/lunar/proofline-evidence-before-release.
+The page showed judging in progress when checked. No further Lablab submission
+fields or media uploads remain.
 
 ## Submission copy and limits
 
-The copy draft is in `docs/submission-draft.md` and reflects the event form's
-observed text limits and current saved selections. The cover and PDF are saved
-in the form; the video and step-3 demo platform/URL remain pending. The public
-repository does not establish a demo deployment or a submitted entry.
+The final copy and entry verification are in `docs/submission-draft.md`. The
+entry includes the cover, revised PDF, video, public repository, and verified
+Vercel demo link. Submission status was confirmed on the public entry page.
 
 ## Repository state
 
-Current branch and commit are recorded by Git. All reported implementation and
-Codex documentation edits remain local until explicitly committed and
-published. Continue on a feature branch and do not commit or merge directly to
-`main`.
+Current branch and commit are recorded by Git. Keep repository changes on the
+feature branch and merge through its reviewed pull request; do not commit
+directly to `main`.

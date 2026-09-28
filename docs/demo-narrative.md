@@ -6,42 +6,27 @@ Proofline turns release claims into a small evidence report, so teams can say
 what their AI-assisted change actually proved without mistaking a local test or
 simulation for production evidence.
 
-## Event video plan: 2 minutes 55 seconds target
+## Recorded event video: 2 minutes 58 seconds
 
-The event-specific limit is **3 minutes maximum**, with **at least 90 seconds
-showing the solution in action**. This plan allocates 105 seconds to live
-application interaction and leaves five seconds under the hard limit.
+The MP4 is 178 seconds, H.264 at 1280×720, with the original on-screen
+captions preserved and an English voiceover. The video stream is unchanged.
+More than 130 seconds show the local application analyzing synthetic
+examples. A separate closing card shows the verified public Vercel demo URL.
 
-1. **Problem (15 seconds).** A passing local test does not prove a hosted
-   integration works. State that Proofline uses three synthetic scenarios.
-2. **Manifest intake (25 seconds; application in action).** Open the
-   loopback browser interface. Select the declared local-pass example, show the
-   bounded manifest and enter a short change request, then analyze it.
-3. **Evidence and status (45 seconds; application in action).** Show why the
-   manifest-declared pass is conditional, expand its evidence record, and point
-   out the source and missing runner observation. Explain that “proven” now
-   requires an explicit allowlisted run in the declared evidence class.
-4. **Scenario changes and exports (45 seconds; application in action).** Select
-   the simulated and unverified examples. Show the status guide, next actions,
-   and JSON/Markdown downloads. Simulation stays simulated; absent hosted
-   evidence stays unverified.
-5. **Explicit local verification (20 seconds).** In a terminal, show:
+1. **Problem and conditional pass.** Introduce the local synthetic preview,
+   analyze the declared local-pass example, and expand its check evidence.
+2. **Other evidence states.** Analyze simulated telemetry and missing hosted
+   evidence, showing their classifications and next actions.
+3. **Reports and limitations.** Show the status guide and method/limitations,
+   including that the browser does not execute checks or call an external AI
+   provider.
+4. **IBM Bob contribution.** Show the redacted Bob task-summary screenshot that
+   is also included with the project repository evidence.
+5. **Close.** Show the separately verified public Vercel URL and state that
+   provider behavior and production readiness remain unverified.
 
-   ```powershell
-   python -m proofline run-report fixtures/local-pass.json --format html --output proofline-verified.html
-   ```
-
-   Explain that only this explicit CLI path runs referenced allowlisted checks;
-   the browser intake never executes them.
-6. **IBM Bob contribution (20 seconds).** Show the genuine Bob IDE work and
-   the redacted session history/summary screenshot in `bob_sessions`. Point to
-   a concrete Bob-assisted source change; do not imply the local report proves
-   hosted behavior.
-7. **Close (5 seconds).** Proofline makes evidence limits visible; it does not
-   certify production readiness.
-
-Target total: **175 seconds**. Keep the final export at or below 180 seconds
-and preserve at least 90 seconds of on-screen application demonstration.
+Output: `docs/submission/proofline-demo.mp4`. The full-resolution clip was
+visually checked at representative points, including the Bob summary segment.
 
 ## Preparation commands
 
@@ -52,10 +37,10 @@ $env:PYTHONPATH = "src"
 python -m proofline web
 ```
 
-Open `http://127.0.0.1:8765` and review all three scenarios in the browser
-before recording. Run the explicit `run-report` command only when demonstrating
-an actually observed allowlisted local check. Recheck the exact build being
-recorded.
+Open `http://127.0.0.1:8765` and review all three synthetic scenarios in the
+browser before recording. Run the explicit `run-report` command only when
+demonstrating an actually observed allowlisted local check. The browser intake
+never executes checks.
 
 ## Evidence to show
 
@@ -63,9 +48,12 @@ recorded.
 - The conditional state for a manifest-declared pass.
 - Evidence source, provenance, and observation time in the expanded record.
 - The limitations and next action beside each claim.
-- The browser intake, offline report, and export controls.
+- The browser intake, report guide, method limitations, and export controls.
 - The real Bob IDE work and the redacted task-history Markdown plus summary
   screenshot already in `bob_sessions`.
 
-Do not say a URL is live, Bob task evidence is exported, or the project was
-submitted unless that has been verified.
+The public Vercel page was checked with synthetic input. This video records the
+local preview and displays the public URL separately; it does not claim that
+the hosted deployment ran the recorded interactions. The video and revised
+presentation are included in the published Lablab entry, whose page showed
+judging in progress when checked.

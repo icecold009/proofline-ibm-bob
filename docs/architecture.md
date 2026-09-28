@@ -23,8 +23,8 @@
 - Hosted adapter: static client in `public/` uses the Vercel API functions in
   `api/` for bounded analysis and report rendering. The API does not run checks
   or persist application data; it has no application-layer authentication or
-  per-caller rate limit. No live deployment or effective platform protection
-  has been verified. Hosted requests reach Vercel, so use synthetic or
+  per-caller rate limit. Effective platform protection and request retention
+  remain unverified. Hosted requests reach Vercel, so use synthetic or
   public-safe data only.
 - Fixtures: synthetic scenarios for repeatable demo verification.
 

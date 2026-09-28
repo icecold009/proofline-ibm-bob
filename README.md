@@ -77,9 +77,11 @@ python -m proofline web
 
 Open `http://127.0.0.1:8765`. The local preview binds to loopback, processes
 manifests in memory, and does not run checks or persist submissions. The
-repository also includes a Vercel static/API adapter under `public/` and `api/`;
-no live deployment has been verified. Hosted requests leave the browser and
-reach Vercel, so use synthetic or public-safe data only.
+repository also includes a Vercel static/API adapter under `public/` and `api/`.
+The public Vercel demo was opened and exercised with synthetic input; this
+limited check does not establish provider behavior or production readiness.
+Hosted requests leave the browser and reach Vercel, so use synthetic or
+public-safe data only.
 
 ## Run an allowlisted local check
 
@@ -98,8 +100,8 @@ checks; report generation only evaluates the supplied manifest.
 - `docs/hackathon-rules.md` — published event facts and submission requirements.
 - `docs/product-brief.md`, `docs/architecture.md` — product contract and design.
 - `docs/hackathon-build/` — spec, checklist, and implementation decisions.
-- `docs/submission-draft.md` — copy-ready submission draft and outstanding items.
-- `docs/submission/` — editable pitch deck, PDF export, and cover image.
+- `docs/submission-draft.md` — submitted copy and current public-entry record.
+- `docs/submission/` — editable pitch deck, PDF export, cover, and event video.
 - `fixtures/` — synthetic, non-sensitive examples.
 - `src/` and `tests/` — CLI, deterministic engine, registry, runner, renderers,
   and tests.
@@ -119,16 +121,17 @@ The declaration registry, bounded local check runner, deterministic report
 calculation, offline HTML report, loopback browser intake, and Vercel adapter
 code are implemented. The hosted API has no application-layer authentication
 or per-caller rate limit; effective platform protection and request retention
-are unverified, so use synthetic or public-safe data only. No live deployment
-has been verified.
+are unverified, so use synthetic or public-safe data only. A public Vercel demo
+was verified with synthetic input.
 Manifest-declared results remain conditional; `run-report` is the explicit path
 that can produce runner-observed local evidence. Reports expose evidence source,
 provenance, and observation time. A seven-slide editable pitch deck and PDF
 export are in `docs/submission/`. The Bob task-history Markdown and its
 consumption-summary screenshot are in `bob_sessions/`. The GitHub repository is
-public, with `main` as the default branch; the release branches point to the
-same commit. The online demo and event-specific video remain pending. The
-project uses the MIT License.
+public, with `main` as the default branch. The event-specific video and revised
+PDF deck are included in `docs/submission/`; the public Lablab entry is live and
+its judging status was shown as in progress when checked. The project uses the
+MIT License.
 
 Use a feature branch for changes. Never commit credentials, private data, or
 Bob exports that have not been redacted.

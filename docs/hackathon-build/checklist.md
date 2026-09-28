@@ -27,7 +27,7 @@
   Acceptance: A new builder can understand the product, safety rules, and Bob
   evidence workflow without private context.
   Verify: Read and aligned README.md, AGENTS.md, and SECURITY.md; README now
-  documents current commands, status, boundaries, and pending public artifacts.
+  documents current commands, status, boundaries, and published artifacts.
 
 - [x] **3. Prepare synthetic fixtures**
   Spec ref: spec.md > Claim record
@@ -136,13 +136,20 @@
   changed source files. The current local suite passes 106 tests. The scan did
   not assess hosted or production behavior.
 
-- [ ] **11. Prepare the submission package**
+- [x] **11. Upload and submit the submission package**
   Spec ref: prd.md > Submission proof points
-  What to build: Prepare README setup, demo URL, screenshots, video, deck,
-  limitations, and redacted bob_sessions exports. Copy draft, editable deck,
-  PDF, and cover image are prepared in docs/submission-draft.md and
-  docs/submission/; Bob evidence is present. Public repository access is
-  verified; demo URL and video remain pending; MIT licensing is declared.
+  What to build: Prepare the submission copy, demo URL, screenshots, video,
+  deck, limitations, and redacted bob_sessions exports; upload the required
+  media and save all available Lablab form fields.
+  Locally completed:
+  - [x] Submission copy, categories, technology tag, public repository, Bob
+    evidence, and MIT license are checked against current repository evidence.
+  - [x] Cover image and revised seven-slide editable deck/PDF are prepared;
+    slide text and rendered pages were reviewed.
+  - [x] Captioned 178-second MP4 is prepared and visually checked; it includes
+    more than 90 seconds of local product interaction and a Bob task-summary
+    segment.
+  - [x] Vercel demo URL is verified with a synthetic conditional case.
   Acceptance: A reviewer can run the project and understand Bob's role; the
   required public URL, video, form fields, and evidence are complete.
   Verify: Event form requires title (5–50 characters), short description
@@ -150,17 +157,21 @@
   each, no more than 500 words), categories, technologies, public repository,
   Bob summary screenshots, demo platform and URL, cover image, MP4 video
   (3-minute maximum with at least 90 seconds of solution action), and PDF deck.
-  Copy draft is updated. Bob evidence is present. GitHub reports the repository
-  as public with `main` as default. The Lablab draft has the cover, PDF,
-  Developer Tools and Productivity categories, and the `Ibm` technology tag
-  saved. The required video, live demo URL, and final form fields remain
-  pending. MIT is declared in the root license and package metadata.
+  The public Lablab entry is available at
+  https://lablab.ai/ai-hackathons/ibm-bob-2-hackathon/lunar/proofline-evidence-before-release;
+  the entry page showed judging in progress when checked. Its media and links
+  include the prepared MP4, revised PDF, cover, public repository, and verified
+  Vercel demo. The saved fields include Developer Tools and Productivity, the
+  `Ibm` technology tag, the demo platform and URL, and the project statements.
+  MIT is declared in the root license and package metadata. Submission complete.
 
-- [ ] **12. Prepare the final handoff**
+- [x] **12. Prepare the current status handoff**
   Spec ref: prd.md > Submission proof points
-  What to build: Gather project story, final screenshots, repository link,
-  demo instructions, and the final event-specific submission fields. A local
-  handoff with known facts and explicit pending items is in
-  docs/hackathon-build/handoff.md.
-  Acceptance: No required submission field is left guessed.
-  Verify: Complete the lablab form only after checking kickoff instructions.
+  What to build: Gather the project story, artifacts, repository link, demo
+  instructions, verified form values, and remaining external actions in a
+  concise handoff.
+  Acceptance: Confirmed facts, local evidence, and the published submission
+  state are separated; no inaccessible field is guessed.
+  Verify: `docs/hackathon-build/handoff.md` and `docs/submission-draft.md`
+  record the verified demo, media, saved Lablab fields, and public entry. The
+  entry is submitted and its judging status was in progress when checked.
