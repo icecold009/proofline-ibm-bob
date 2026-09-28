@@ -10,9 +10,13 @@ simulated, local, or still unverified.
 - Derives claim status from evidence: proven, conditional, simulated,
   unverified, or blocked.
 - Runs only checks in a static, code-owned allowlist through the explicit
-  `run-check` command.
+  `run-check` or `run-report` command.
 - Produces JSON, Markdown, or self-contained offline HTML reports.
-- Uses synthetic fixtures; it does not connect to a provider or deployment.
+- Includes a local loopback browser interface and a separate Vercel static/API
+  adapter for hosted analysis. Both browser paths validate bounded manifests
+  and render reports without executing checks or persisting application data.
+- Uses synthetic fixtures and has no provider integration. The hosted adapter
+  sends browser requests to Vercel; use synthetic or public-safe data only.
 
 ## Requirements
 
@@ -47,9 +51,37 @@ $env:PYTHONPATH = "src"
 python -m proofline fixtures/local-pass.json --format html --output proofline-report.html
 ```
 
+This command analyzes only the supplied manifest. A declared passing result is
+shown as **conditional** until Proofline observes the allowlisted check run.
 Change the fixture to `simulated-only.json` or `hosted-unverified.json` to see
 how Proofline preserves those evidence limits. Supported report formats are
 `json` (default), `markdown`, and `html`.
+
+To explicitly run only the registered checks referenced by a manifest, then
+write a report containing those observed results:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m proofline run-report fixtures/local-pass.json --format html --output proofline-verified.html
+```
+
+The separate command runs only code-owned allowlisted checks. It does not
+interpret command text from the manifest.
+
+## Open the browser interface
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m proofline web
+```
+
+Open `http://127.0.0.1:8765`. The local preview binds to loopback, processes
+manifests in memory, and does not run checks or persist submissions. The
+repository also includes a Vercel static/API adapter under `public/` and `api/`.
+The public Vercel demo was opened and exercised with synthetic input; this
+limited check does not establish provider behavior or production readiness.
+Hosted requests leave the browser and reach Vercel, so use synthetic or
+public-safe data only.
 
 ## Run an allowlisted local check
 
@@ -68,8 +100,8 @@ checks; report generation only evaluates the supplied manifest.
 - `docs/hackathon-rules.md` — published event facts and submission requirements.
 - `docs/product-brief.md`, `docs/architecture.md` — product contract and design.
 - `docs/hackathon-build/` — spec, checklist, and implementation decisions.
-- `docs/submission-draft.md` — copy-ready submission draft and outstanding items.
-- `docs/submission/` — editable pitch deck, PDF export, and cover image.
+- `docs/submission-draft.md` — submitted copy and current public-entry record.
+- `docs/submission/` — editable pitch deck, PDF export, cover, and event video.
 - `fixtures/` — synthetic, non-sensitive examples.
 - `src/` and `tests/` — CLI, deterministic engine, registry, runner, renderers,
   and tests.
@@ -86,13 +118,20 @@ the current MVP.
 ## Current build status
 
 The declaration registry, bounded local check runner, deterministic report
-calculation, and offline HTML report are implemented. The report was reviewed
-in a browser during this project. A seven-slide editable pitch deck and PDF
+calculation, offline HTML report, loopback browser intake, and Vercel adapter
+code are implemented. The hosted API has no application-layer authentication
+or per-caller rate limit; effective platform protection and request retention
+are unverified, so use synthetic or public-safe data only. A public Vercel demo
+was verified with synthetic input.
+Manifest-declared results remain conditional; `run-report` is the explicit path
+that can produce runner-observed local evidence. Reports expose evidence source,
+provenance, and observation time. A seven-slide editable pitch deck and PDF
 export are in `docs/submission/`. The Bob task-history Markdown and its
 consumption-summary screenshot are in `bob_sessions/`. The GitHub repository is
-public, with `main` as the default branch; the release branches point to the
-same commit. The online demo and event-specific video remain pending. The
-project uses the MIT License.
+public, with `main` as the default branch. The event-specific video and revised
+PDF deck are included in `docs/submission/`; the public Lablab entry is live and
+its judging status was shown as in progress when checked. The project uses the
+MIT License.
 
 Use a feature branch for changes. Never commit credentials, private data, or
 Bob exports that have not been redacted.

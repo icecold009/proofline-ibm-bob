@@ -17,6 +17,7 @@ MAX_MANIFEST_BYTES = 256 * 1024
 MAX_CLAIMS = 50
 MAX_CHECKS = 100
 MAX_TEXT = 500
+MAX_CHANGE_REQUEST_CHARS = 2000
 
 
 class ValidationError(ValueError):
@@ -29,6 +30,11 @@ class Check:
     result: str
     evidence_class: str
     source: str
+    # These fields are assigned by trusted application code, never read from
+    # a manifest. A manifest can declare a result, but cannot claim that
+    # Proofline observed it.
+    provenance: str = "manifest-declared"
+    observed_at: str | None = None
 
 
 @dataclass(frozen=True)
@@ -45,16 +51,17 @@ class Manifest:
     scenario: str
     claims: tuple[Claim, ...]
     checks: tuple[Check, ...]
+    change_request: str | None = None
 
 
-def _text(value: Any, field: str, *, required: bool = True) -> str:
+def _text(value: Any, field: str, *, required: bool = True, max_length: int = MAX_TEXT) -> str:
     if not isinstance(value, str) or not value.strip():
         if required:
             raise ValidationError(f"{field} must be a non-empty string")
         return ""
     value = value.strip()
-    if len(value) > MAX_TEXT:
-        raise ValidationError(f"{field} exceeds {MAX_TEXT} characters")
+    if len(value) > max_length:
+        raise ValidationError(f"{field} exceeds {max_length} characters")
     return value
 
 
@@ -80,12 +87,18 @@ def validate_manifest(raw: Mapping[str, Any]) -> Manifest:
     if not isinstance(raw, Mapping):
         raise ValidationError("manifest must be a JSON object")
 
-    allowed_root = {"scenario", "claims", "checks"}
+    allowed_root = {"scenario", "claims", "checks", "change_request"}
     unknown_root = set(raw) - allowed_root
     if unknown_root:
         raise ValidationError(f"unknown manifest fields: {sorted(unknown_root)}")
 
     scenario = _text(raw.get("scenario"), "scenario")
+    change_request = _text(
+        raw.get("change_request"),
+        "change_request",
+        required=False,
+        max_length=MAX_CHANGE_REQUEST_CHARS,
+    ) or None
     raw_claims = _list(raw.get("claims"), "claims")
     raw_checks = _list(raw.get("checks"), "checks")
 
@@ -154,7 +167,12 @@ def validate_manifest(raw: Mapping[str, Any]) -> Manifest:
         check_ids.append(check_id)
 
     _unique_ids(check_ids, "checks")
-    return Manifest(scenario=scenario, claims=tuple(claims), checks=tuple(checks))
+    return Manifest(
+        scenario=scenario,
+        claims=tuple(claims),
+        checks=tuple(checks),
+        change_request=change_request,
+    )
 
 
 def load_manifest(path: str | Path) -> Manifest:

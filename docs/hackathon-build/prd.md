@@ -5,14 +5,22 @@
 ### Claim intake
 
 - Accept one bounded change request.
+- Let a user choose a synthetic scenario or enter one claim in a guided form in
+  the loopback browser interface; retain advanced JSON edit/upload for multiple
+  claims.
 - Reject oversized or malformed manifests.
-- Assign stable IDs to claims.
+- Assign a stable, editable ID to the guided claim; validate IDs in advanced
+  manifests.
 
 ### Evidence classification
 
 - Support local, browser, hosted, provider, data, and security evidence.
 - Default missing evidence to unverified.
 - Preserve the original evidence class in every report.
+- Show check result, source, provenance, and observation time beside each
+  referenced claim.
+- Keep a manifest-declared result conditional until an explicit allowlisted
+  runner observes it pass.
 
 ### Safe verification
 
@@ -23,8 +31,10 @@
 ### Report
 
 - Display summary counts by status.
+- State the plain-language report outcome and explain status meanings.
 - Display each claim, its evidence, its limitation, and next action.
 - Export deterministic JSON and Markdown.
+- Record report generation time.
 
 ### Demo reliability
 
@@ -38,6 +48,7 @@
 - Copyable Markdown output.
 - Keyboard-accessible status controls.
 - Human-readable limitation language.
+- Collapse generic method notes so claim evidence stays primary.
 
 ## Non-goals
 

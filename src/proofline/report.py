@@ -100,30 +100,59 @@ def render_html(report: dict[str, Any]) -> str:
     json_blob = _embed_json(report)
 
     # ---- Summary table rows ----
+    summary = report["summary"]
+    claim_count = len(report["claims"])
+    proven_count = summary.get("proven", 0)
+    if not claim_count:
+        outcome_text = "No claims have been analyzed yet."
+    elif proven_count:
+        outcome_text = (
+            f"Proofline observed evidence for {proven_count} of {claim_count} claims "
+            "within their declared evidence classes."
+        )
+    else:
+        outcome_text = "No claim has runner-observed evidence in its declared evidence class yet."
+
     summary_rows = ""
-    for status, count in report["summary"].items():
+    for status, count in summary.items():
         badge = _status_badge(status)
         summary_rows += (
             f"<tr><td>{badge}</td>"
             f"<td class='num'>{_esc(count)}</td></tr>\n"
         )
 
+    checks_by_id = {check["id"]: check for check in report.get("checks", [])}
+
     # ---- Claim articles ----
     claims_html = ""
     for claim in report["claims"]:
         status = claim.get("status", "unverified")
         refs = claim.get("evidence_refs") or []
-        refs_html = (
-            "<ul>" + "".join(f"<li>{_esc(r)}</li>" for r in refs) + "</ul>"
-            if refs else "<em>none</em>"
-        )
+        evidence_rows: list[str] = []
+        for ref in refs:
+            check = checks_by_id.get(ref)
+            if check is None:
+                evidence_rows.append(f"<li><code>{_esc(ref)}</code> — no matching evidence record</li>")
+                continue
+            evidence_rows.append(
+                f"""<li><details class="evidence-detail">
+  <summary><code>{_esc(ref)}</code> — {_status_badge(check.get('result', 'unknown'))}</summary>
+  <dl>
+    <dt>Evidence class</dt><dd>{_esc(check.get('evidence_class', ''))}</dd>
+    <dt>Source</dt><dd>{_esc(check.get('source', 'not supplied'))}</dd>
+    <dt>Provenance</dt><dd>{_esc(check.get('provenance', 'manifest-declared').replace('-', ' '))}</dd>
+    <dt>Observed at</dt><dd>{_esc(check.get('observed_at') or 'not recorded')}</dd>
+</dl>
+</details></li>"""
+            )
+        refs_html = '<ul class="evidence-list">' + "".join(evidence_rows) + "</ul>" if evidence_rows else "<em>none supplied</em>"
         claims_html += f"""
 <article class="claim">
   <h3>{_esc(claim.get("title", ""))}</h3>
   <dl>
     <dt>Evidence class</dt><dd>{_esc(claim.get("evidence_class", ""))}</dd>
     <dt>Status</dt><dd>{_status_badge(status)}</dd>
-    <dt>Evidence references</dt><dd>{refs_html}</dd>
+  <dt>Evidence references</dt><dd>{refs_html}</dd>
     <dt>Limitation</dt><dd>{_esc(claim.get("limitation") or "—")}</dd>
     <dt>Next action</dt><dd>{_esc(claim.get("next_action") or "—")}</dd>
   </dl>
@@ -211,6 +240,7 @@ def render_html(report: dict[str, Any]) -> str:
     generated_at = _esc(report.get("generated_at") or "not supplied")
     report_id = _esc(report.get("report_id", ""))
     scenario = _esc(report.get("scenario", ""))
+    change_request = _esc(report.get("change_request") or "Not supplied")
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -237,7 +267,16 @@ th, td {{ text-align: left; padding: 0.4rem 0.75rem;
 th {{ background: #f7f8fa; font-weight: 600; }}
 .num {{ text-align: right; font-variant-numeric: tabular-nums; }}
 .claim {{ border: 1px solid #e5e7eb; border-radius: 6px;
-          padding: 1rem; margin-bottom: 1rem; background: #f7f8fa; }}
+           padding: 1rem; margin-bottom: 1rem; background: #f7f8fa; }}
+.outcome {{ border-left: 4px solid #2563eb; background: #eff6ff;
+            border-radius: 4px; padding: 0.85rem 1rem; margin: 0.75rem 0 1.25rem; }}
+.boundary {{ color: #57606a; font-size: 0.875rem; margin-top: 0.35rem; }}
+details {{ margin: 0.65rem 0; }}
+summary {{ cursor: pointer; font-weight: 600; }}
+.evidence-list {{ padding-left: 1.25rem; }}
+.evidence-detail {{ border: 1px solid #e5e7eb; border-radius: 4px; padding: 0.4rem 0.55rem; }}
+.evidence-detail dl {{ margin-top: 0.5rem; }}
+details.method {{ border-top: 1px solid #e5e7eb; padding-top: 0.5rem; }}
 dl {{ display: grid; grid-template-columns: 10rem 1fr; gap: 0.25rem 1rem; }}
 dt {{ font-weight: 600; color: #57606a; font-size: 0.875rem; padding-top: 0.1rem; }}
 dd ul {{ margin: 0; padding-left: 1.2rem; }}
@@ -253,7 +292,7 @@ button {{
   font-size: 0.875rem; cursor: pointer;
 }}
 button:hover {{ background: #f3f4f6; }}
-button:focus {{ outline: 2px solid #3b82d4; outline-offset: 2px; }}
+button:focus-visible, summary:focus-visible {{ outline: 2px solid #3b82d4; outline-offset: 2px; }}
 textarea {{
   width: 100%; height: 12rem; font-family: monospace; font-size: 0.8rem;
   border: 1px solid #e5e7eb; border-radius: 4px; padding: 0.5rem;
@@ -279,6 +318,13 @@ footer {{ margin-top: 2.5rem; padding-top: 1rem;
   Generated: {generated_at}
 </p>
 
+<section class="outcome" aria-live="polite">
+  <strong>{_esc(outcome_text)}</strong>
+  <p class="boundary">This report reflects its supplied evidence. It does not certify hosted behavior or production readiness.</p>
+</section>
+
+<p><strong>Change request:</strong> {change_request}</p>
+
 <h2>Summary</h2>
 <table>
   <thead><tr><th>Status</th><th class="num">Count</th></tr></thead>
@@ -289,10 +335,23 @@ footer {{ margin-top: 2.5rem; padding-top: 1rem;
 <h2>Claims</h2>
 {claims_html}
 
-<h2>Security notes</h2>
+<details class="method">
+<summary>Method and limitations</summary>
 <ul class="notes">
 {notes_html}
 </ul>
+</details>
+
+<details class="method">
+<summary>Status guide</summary>
+<ul class="notes">
+  <li><strong>Proven:</strong> a referenced allowlisted check ran and passed in the claim's evidence class.</li>
+  <li><strong>Conditional:</strong> evidence was declared but not runner-verified, or came from a different evidence class.</li>
+  <li><strong>Simulated:</strong> the supporting result is a synthetic fixture, not live behavior.</li>
+  <li><strong>Unverified:</strong> evidence is missing or a required check failed.</li>
+  <li><strong>Blocked:</strong> a referenced check is missing or is not in the static registry.</li>
+</ul>
+</details>
 
 <h2>Export</h2>
 <div class="controls">
@@ -310,7 +369,7 @@ footer {{ margin-top: 2.5rem; padding-top: 1rem;
 
 <script type="application/json" id="report-json-data">{json_blob}</script>
 <script>{js}</script>
-<footer>Made with IBM Bob</footer>
+<footer>Proofline · local evidence report</footer>
 </body>
 </html>
 """
@@ -319,11 +378,22 @@ footer {{ margin-top: 2.5rem; padding-top: 1rem;
 def render_markdown(report: dict[str, Any]) -> str:
     """Render a report without interpreting claim text as HTML."""
 
+    proven = report["summary"].get("proven", 0)
+    total = len(report["claims"])
+    outcome = (
+        f"Proofline observed evidence for {proven} of {total} claims within their declared evidence classes."
+        if proven
+        else "No claim has runner-observed evidence in its declared evidence class yet."
+    )
     lines = [
         "# Proofline evidence brief",
         "",
+        f"> {outcome}",
+        "> This report reflects supplied evidence. It does not certify hosted behavior or production readiness.",
+        "",
         f"- Report: {_cell(report['report_id'])}",
         f"- Scenario: {_cell(report['scenario'])}",
+        f"- Change request: {_cell(report.get('change_request') or 'not supplied')}",
         f"- Generated at: {_cell(report['generated_at'] or 'not supplied')}",
         "",
         "## Summary",
@@ -339,8 +409,8 @@ def render_markdown(report: dict[str, Any]) -> str:
             "",
             "## Claims",
             "",
-            "| Claim | Evidence class | Status | Limitation | Next action |",
-            "| --- | --- | --- | --- | --- |",
+            "| Claim | Evidence class | Status | Evidence references | Limitation | Next action |",
+            "| --- | --- | --- | --- | --- | --- |",
         ]
     )
     for claim in report["claims"]:
@@ -348,11 +418,30 @@ def render_markdown(report: dict[str, Any]) -> str:
             "| "
             + " | ".join(
                 _cell(claim[field])
-                for field in ("title", "evidence_class", "status", "limitation", "next_action")
+                for field in ("title", "evidence_class", "status")
+            )
+            + " | " + _cell(", ".join(claim.get("evidence_refs", [])))
+            + " | " + " | ".join(
+                _cell(claim[field]) for field in ("limitation", "next_action")
             )
             + " |"
         )
 
-    lines.extend(["", "## Security notes", ""])
+    lines.extend(["", "## Evidence records", ""])
+    lines.extend(
+        [
+            "| Check | Result | Evidence class | Source | Provenance | Observed at |",
+            "| --- | --- | --- | --- | --- | --- |",
+        ]
+    )
+    for check in report.get("checks", []):
+        lines.append(
+            "| " + " | ".join(
+                _cell(check.get(field) or "not recorded")
+                for field in ("id", "result", "evidence_class", "source", "provenance", "observed_at")
+            ) + " |"
+        )
+
+    lines.extend(["", "## Method and limitations", ""])
     lines.extend(f"- {_cell(note)}" for note in report["security_notes"])
     return "\n".join(lines) + "\n"

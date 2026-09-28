@@ -46,6 +46,7 @@ import os
 import subprocess
 import sys
 from dataclasses import dataclass
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
 
@@ -81,6 +82,9 @@ class CheckRunResult:
     check_id: str
     result: str
     evidence_class: str
+    source: str = "Proofline allowlisted local runner"
+    provenance: str = "runner-observed"
+    observed_at: str | None = None
 
 
 # ---------------------------------------------------------------------------
@@ -192,6 +196,8 @@ def run_check(check_id: str) -> CheckRunResult:
             check_id=check_id,
             result="blocked",
             evidence_class="local",
+            source="Unknown check ID; no process was launched",
+            provenance="registry-blocked",
         )
 
     handler = _DISPATCH.get(defn.operation)
@@ -202,11 +208,21 @@ def run_check(check_id: str) -> CheckRunResult:
             check_id=check_id,
             result=defn.failure_status,
             evidence_class=defn.evidence_class,
+            source="Registered operation has no runner",
+            provenance="runner-error",
         )
 
     result = handler(defn)
+    is_fixture = defn.operation is OperationKind.FIXTURE_EVIDENCE
     return CheckRunResult(
         check_id=check_id,
         result=result,
         evidence_class=defn.evidence_class,
+        source="Synthetic fixture marker" if is_fixture else "Proofline allowlisted local runner",
+        provenance="synthetic-fixture" if is_fixture else "runner-observed",
+        observed_at=(
+            None
+            if is_fixture
+            else datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
+        ),
     )

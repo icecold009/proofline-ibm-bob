@@ -27,7 +27,7 @@
   Acceptance: A new builder can understand the product, safety rules, and Bob
   evidence workflow without private context.
   Verify: Read and aligned README.md, AGENTS.md, and SECURITY.md; README now
-  documents current commands, status, boundaries, and pending public artifacts.
+  documents current commands, status, boundaries, and published artifacts.
 
 - [x] **3. Prepare synthetic fixtures**
   Spec ref: spec.md > Claim record
@@ -110,24 +110,21 @@
   Acceptance: Simulation never becomes hosted or provider proof.
   Verify: Run all three golden fixtures twice and compare outputs.
 
-- [x] **9. Build the read-only report UI**
+- [x] **9. Build the read-only report UI and browser intake**
   Spec ref: spec.md > Report contract
-  What to build: Show claims, status, evidence class, limitations, and export
-  actions in one clear view. Implemented as render_html() in report.py,
-  exposed via --format html on the CLI.
-  Acceptance: A new viewer understands the result within 30 seconds.
-  Verify: Test the three fixtures in a clean browser.
-  Implementation status: Bob-implemented. python scripts/verify.py passed
-  (100 tests). HTML generation smoke tests passed for all three fixtures.
-  BROWSER VERIFICATION: Human reviewed all three previews in a clean browser
-  and confirmed the layout, status distinctions, and claim content. Copy and
-  download controls were confirmed working.
-  Preview files generated to temp directory for human review:
-    %TEMP%\proofline-local-pass.html
-    %TEMP%\proofline-simulated-only.html
-    %TEMP%\proofline-hosted-unverified.html
-  To regenerate: python -m proofline fixtures/<name>.json --format html
-    --output <path.html>  (set PYTHONPATH=src first)
+  What to build: Show a plain-language outcome, claim statuses, expandable
+  evidence provenance, limitations, next actions, and exports. Provide a
+  loopback-only guided single-claim intake and advanced bounded JSON manifest
+  intake.
+  Acceptance: A new viewer understands the result within 30 seconds; browser
+  intake never executes checks, saves manifests, or calls external services.
+  Verify: the bundled Python runtime ran `scripts/verify.py`; all 106 tests
+  passed, including loopback intake, registry options, and the no-check-execution
+  contract. Browser review covered all three scenarios, expected status changes,
+  evidence details, a 390px mobile layout, Markdown copy, and JSON download. No
+  horizontal overflow or console/page errors appeared.
+  Implementation status: Guided intake and advanced JSON mode are implemented
+  on codex/proofline-product-improvements and visually reviewed in a browser.
 
 - [x] **10. Run code review and security pass**
   Spec ref: spec.md > Future runtime boundary
@@ -136,17 +133,23 @@
   Acceptance: Review reports no security findings; command execution is
   allowlisted and bounded; report text preserves evidence limits.
   Verify: Codex Security diff scan completed with zero findings across six
-  changed source files. `python scripts/verify.py` passed 100 tests. The review
-  was sequential because delegated workers were unavailable; it did not assess
-  a hosted or production environment.
+  changed source files. The current local suite passes 106 tests. The scan did
+  not assess hosted or production behavior.
 
-- [ ] **11. Prepare the submission package**
+- [x] **11. Upload and submit the submission package**
   Spec ref: prd.md > Submission proof points
-  What to build: Prepare README setup, demo URL, screenshots, video, deck,
-  limitations, and redacted bob_sessions exports. Copy draft, editable deck,
-  PDF, and cover image are prepared in docs/submission-draft.md and
-  docs/submission/; Bob evidence is present. Public repository access is
-  verified; demo URL and video remain pending; MIT licensing is declared.
+  What to build: Prepare the submission copy, demo URL, screenshots, video,
+  deck, limitations, and redacted bob_sessions exports; upload the required
+  media and save all available Lablab form fields.
+  Locally completed:
+  - [x] Submission copy, categories, technology tag, public repository, Bob
+    evidence, and MIT license are checked against current repository evidence.
+  - [x] Cover image and revised seven-slide editable deck/PDF are prepared;
+    slide text and rendered pages were reviewed.
+  - [x] Captioned 178-second MP4 is prepared and visually checked; it includes
+    more than 90 seconds of local product interaction and a Bob task-summary
+    segment.
+  - [x] Vercel demo URL is verified with a synthetic conditional case.
   Acceptance: A reviewer can run the project and understand Bob's role; the
   required public URL, video, form fields, and evidence are complete.
   Verify: Event form requires title (5–50 characters), short description
@@ -154,15 +157,21 @@
   each, no more than 500 words), categories, technologies, public repository,
   Bob summary screenshots, demo platform and URL, cover image, MP4 video
   (3-minute maximum with at least 90 seconds of solution action), and PDF deck.
-  Copy draft is updated. Bob evidence is present. GitHub reports the repository
-  as public with `main` as default; demo URL and video are pending. MIT is
-  declared in the root license and package metadata.
+  The public Lablab entry is available at
+  https://lablab.ai/ai-hackathons/ibm-bob-2-hackathon/lunar/proofline-evidence-before-release;
+  the entry page showed judging in progress when checked. Its media and links
+  include the prepared MP4, revised PDF, cover, public repository, and verified
+  Vercel demo. The saved fields include Developer Tools and Productivity, the
+  `Ibm` technology tag, the demo platform and URL, and the project statements.
+  MIT is declared in the root license and package metadata. Submission complete.
 
-- [ ] **12. Prepare the final handoff**
+- [x] **12. Prepare the current status handoff**
   Spec ref: prd.md > Submission proof points
-  What to build: Gather project story, final screenshots, repository link,
-  demo instructions, and the final event-specific submission fields. A local
-  handoff with known facts and explicit pending items is in
-  docs/hackathon-build/handoff.md.
-  Acceptance: No required submission field is left guessed.
-  Verify: Complete the lablab form only after checking kickoff instructions.
+  What to build: Gather the project story, artifacts, repository link, demo
+  instructions, verified form values, and remaining external actions in a
+  concise handoff.
+  Acceptance: Confirmed facts, local evidence, and the published submission
+  state are separated; no inaccessible field is guessed.
+  Verify: `docs/hackathon-build/handoff.md` and `docs/submission-draft.md`
+  record the verified demo, media, saved Lablab fields, and public entry. The
+  entry is submitted and its judging status was in progress when checked.

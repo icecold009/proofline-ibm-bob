@@ -1,7 +1,8 @@
 # IBM Bob 2.0 Hackathon guidance
 
-Last checked: 2026-09-26 against the live event page, signed-in team dashboard,
-and submission form. Recheck the dashboard before submitting.
+Event requirements checked: 2026-09-27 (India Standard Time) against the live
+event page and signed-in submission form. The submission deadline has passed;
+the published entry and its current judging status are recorded below.
 
 ## Current event facts
 
@@ -12,10 +13,13 @@ and submission form. Recheck the dashboard before submitting.
 - Published prize pool: $12,000.
 - The event page says participants may build solo or as a team and must register
   before the kickoff stream to start building with Bob.
-- The event page currently shows submissions open and a close at September 27,
-  2026, 20:30 India Standard Time (15:00 UTC).
-- The signed-in dashboard shows the account as Approved, a one-member team, and
-  a submission draft in progress. The submission form currently shows 0%.
+- At the time checked, the event page showed submissions open with a close at
+  September 27, 2026, 20:30 India Standard Time (15:00 UTC). That deadline has
+  passed.
+- The signed-in dashboard showed the account as Approved and a one-member team;
+  solo participation is allowed. The submitted entry includes Developer Tools
+  and Productivity categories, the `Ibm` technology tag, cover, revised PDF,
+  video, repository, and demo links.
 - Solo participation is allowed; the one-member team is not itself a blocker.
 
 Sources:
@@ -74,18 +78,21 @@ Project policy: use synthetic fixtures; do not include real client, learner,
 personal, confidential, or social-media data. Redact credentials, tokens, and
 private paths from Bob history and screenshots before placing them in the repo.
 
-## Remaining account or submission checks
+## Submission outcome and verification
 
+- The public entry is available at
+  https://lablab.ai/ai-hackathons/ibm-bob-2-hackathon/lunar/proofline-evidence-before-release.
+- The entry page was verified after submission; its status showed judging in
+  progress.
 - The account's Approved status and one-member team were observed in the
-  dashboard; recheck eligibility if the dashboard changes.
-- The exact category/technology selections and any further fields shown on
-  later submission steps.
-- Upload size limits and accepted URL formats were not visible on the first
-  form step; check them in the form before uploading.
-- The redacted Bob task history and summary screenshot are included in the
-  public repository.
+  dashboard; solo participation is allowed.
+- The entry links the public repository, Vercel demo, video, and presentation.
+- The redacted combined-task Bob history and its summary screenshot are present
+  under `bob_sessions/` in the public repository; the user confirmed all
+  project prompts were within that one task.
 - GitHub reports the repository as public, with `main` as the default branch.
-  The public demo and video are not yet available.
+  The Vercel demo was checked with synthetic input.
 
-Do not claim a public demo or completed submission until its corresponding
-artifact exists and has been checked.
+The submission is complete. The evidence above establishes the published entry
+and linked artifacts; it does not establish provider behavior or production
+readiness.

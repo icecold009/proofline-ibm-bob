@@ -11,11 +11,12 @@ enough to leave time for Bob evidence, demo recording, and submission materials.
 
 ## Core user journey
 
-1. The builder imports one change request.
-2. The builder loads one evidence manifest.
+1. The builder enters one bounded change request.
+2. The builder loads or edits one evidence manifest in the local browser UI.
 3. Proofline classifies claims by evidence class.
-4. Proofline runs only known local checks.
-5. The builder sees what is proven, simulated, unverified, or blocked.
+4. Manifest declarations stay conditional; an explicit CLI command runs only
+   known local checks.
+5. The builder sees the result, source, provenance, limitation, and next action.
 6. The builder exports a release brief.
 
 ## Cut list
