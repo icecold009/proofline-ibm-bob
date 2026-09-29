@@ -6,6 +6,7 @@ import http.client
 import io
 import json
 import threading
+import time
 import unittest
 from contextlib import redirect_stdout
 from http.server import HTTPServer
@@ -95,13 +96,19 @@ class BrowserIntakeTests(unittest.TestCase):
             status, body, headers = self.request_with_headers(
                 "GET", "/api/fixtures?name=simulated-only&private_marker=never-log-this"
             )
-        record = json.loads(output.getvalue())
+            expected_request_id = headers["X-Request-ID"]
+            deadline = time.monotonic() + 1
+            while expected_request_id not in output.getvalue() and time.monotonic() < deadline:
+                time.sleep(0.005)
+        records = [json.loads(line) for line in output.getvalue().splitlines() if line]
+        record = next((item for item in records if item["request_id"] == expected_request_id), None)
+        self.assertIsNotNone(record, "the response log for this request was not captured")
         self.assertEqual(status, 200)
         self.assertEqual(record["route"], "/api/fixtures")
         self.assertEqual(record["status"], 200)
         self.assertEqual(record["response_bytes"], len(body))
         self.assertGreaterEqual(record["duration_ms"], 0)
-        self.assertEqual(record["request_id"], headers["X-Request-ID"])
+        self.assertEqual(record["request_id"], expected_request_id)
         self.assertEqual(set(record), {"request_id", "route", "status", "response_bytes", "duration_ms"})
         self.assertNotIn("private_marker", output.getvalue())
         self.assertNotIn("127.0.0.1", output.getvalue())
