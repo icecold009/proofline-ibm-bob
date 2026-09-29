@@ -20,7 +20,7 @@ simulated, local, or still unverified.
 
 ## Requirements
 
-- Python 3.10 or newer. The project uses only the Python standard library for
+- Python 3.11 or newer. The project uses only the Python standard library for
   application code and its built-in verifier.
 - Run commands from the repository root.
 
@@ -41,6 +41,29 @@ python -m pytest tests/ -v
 
 The direct pytest command requires `pytest` to be installed; the standard
 verification command above does not.
+
+## Manifest and report contract
+
+The bounded manifest has `scenario`, `claims`, and `checks`, with optional
+`change_request` and optional nullable `repository_id`. A supplied repository
+identifier is trimmed text of at most 500 characters and may not contain
+control characters. It is descriptive metadata only: it does not select a
+checkout, path, check, or evidence source. JSON reports contain
+`"repository_id": null` when it was not supplied; Markdown and HTML display
+“Not supplied.”
+
+Report IDs are deterministic. Omitting or setting `repository_id` to null
+preserves the existing report-ID seed for legacy manifests. A supplied,
+normalized identifier becomes part of the seed and produces a distinct report
+identity. `generated_at` is not part of the seed.
+
+The CLI surface is `python -m proofline report <manifest>`,
+`python -m proofline run-check <check-id>`,
+`python -m proofline run-report <manifest>`, and `python -m proofline web`.
+The legacy `python -m proofline <manifest>` report form remains supported.
+`run_check(check_id)` accepts only a registered check ID; repository root,
+command arguments, working directory, environment, and timeout are
+code-owned.
 
 ## Generate a report
 
@@ -78,8 +101,9 @@ python -m proofline web
 Open `http://127.0.0.1:8765`. The local preview binds to loopback, processes
 manifests in memory, and does not run checks or persist submissions. The
 repository also includes a Vercel static/API adapter under `public/` and `api/`.
-The public Vercel demo was opened and exercised with synthetic input; this
-limited check does not establish provider behavior or production readiness.
+An earlier public Vercel demo check used synthetic input. That historical
+check does not verify the current deployment or establish provider behavior
+or production readiness.
 Hosted requests leave the browser and reach Vercel, so use synthetic or
 public-safe data only.
 
@@ -122,7 +146,8 @@ calculation, offline HTML report, loopback browser intake, and Vercel adapter
 code are implemented. The hosted API has no application-layer authentication
 or per-caller rate limit; effective platform protection and request retention
 are unverified, so use synthetic or public-safe data only. A public Vercel demo
-was verified with synthetic input.
+was checked with synthetic input in an earlier review; that is historical
+evidence and does not establish the current deployment state.
 Manifest-declared results remain conditional; `run-report` is the explicit path
 that can produce runner-observed local evidence. Reports expose evidence source,
 provenance, and observation time. A seven-slide editable pitch deck and PDF

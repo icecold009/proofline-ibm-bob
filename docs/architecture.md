@@ -28,6 +28,21 @@
   public-safe data only.
 - Fixtures: synthetic scenarios for repeatable demo verification.
 
+## Interface and report identity
+
+The supported Python minimum is 3.11. The CLI provides `report`, `run-check`,
+`run-report`, and `web`; the legacy positional-manifest report form remains
+supported. The only runner entry point is `run_check(check_id)`, and all
+execution parameters and repository-root resolution remain code-owned.
+
+The manifest may include a nullable top-level `repository_id`. A supplied
+value is trimmed, non-empty text of at most 500 characters with no control
+characters. It is descriptive metadata and cannot select a checkout, path,
+check, evidence source, or status. Reports emit null when the field is absent.
+The canonical report-ID seed remains byte-for-byte equivalent for old
+manifests without the field; when supplied, the normalized value participates
+in the seed. `generated_at` remains outside that seed.
+
 ## Status semantics
 
 - proven — a referenced allowlisted check ran and passed in its declared class;

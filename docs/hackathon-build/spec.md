@@ -51,7 +51,7 @@ No operations are invoked, no commands are executed, and no shell strings are
 constructed.
 
 **Execution milestone (complete):** wires each `OperationKind` to a bounded
-safe invocation via `run_check(check_id, repo_root=...)` in `runner.py`.
+safe invocation via `run_check(check_id)` in `runner.py`.
 `RUN_LOCAL_CONTRACTS` uses a fixed argv (`[sys.executable, scripts/verify.py]`),
 `shell=False`, `capture_output=True`, registry timeout, registry working
 directory, and only explicitly allowed environment variables (no full env
@@ -65,12 +65,30 @@ Every report contains:
 
 - report ID;
 - generated-at value;
-- repository identifier;
+- nullable repository identifier (`repository_id`), null when not supplied;
 - claims;
 - checks;
 - summary counts;
 - limitations;
 - security notes.
+
+`repository_id` is optional descriptive metadata. When supplied it must be a
+non-empty string after trimming, contain no Unicode control characters, and
+fit the existing 500-character text limit. It is not a repository URL, path,
+source selector, or permission to inspect another checkout. It is included in
+JSON, Markdown, and HTML output using format-safe escaping. With the field
+omitted or null, the canonical report-ID input stays exactly as it was for
+legacy manifests; a supplied normalized value is added to that input.
+`generated_at` is excluded from report-ID calculation. The value cannot alter
+claim status, provenance, evidence, check selection, or execution.
+
+## Runtime interface
+
+Proofline supports Python 3.11 or newer. The CLI exposes `report`, `run-check`,
+`run-report`, and `web`, and continues to accept the legacy positional
+manifest report form. `runner.run_check(check_id)` accepts only a static
+registry ID; its repository root, argv, working directory, environment, and
+timeout are resolved by code.
 
 ## Determinism
 

@@ -7,6 +7,7 @@ not execute commands, access the network, or trust a caller-supplied status.
 from __future__ import annotations
 
 import json
+import unicodedata
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Mapping
@@ -52,6 +53,7 @@ class Manifest:
     claims: tuple[Claim, ...]
     checks: tuple[Check, ...]
     change_request: str | None = None
+    repository_id: str | None = None
 
 
 def _text(value: Any, field: str, *, required: bool = True, max_length: int = MAX_TEXT) -> str:
@@ -63,6 +65,22 @@ def _text(value: Any, field: str, *, required: bool = True, max_length: int = MA
     if len(value) > max_length:
         raise ValidationError(f"{field} exceeds {max_length} characters")
     return value
+
+
+def _repository_id(value: Any) -> str | None:
+    """Validate optional descriptive repository metadata without treating it as a path."""
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise ValidationError("repository_id must be a string or null")
+    if any(unicodedata.category(character) == "Cc" for character in value):
+        raise ValidationError("repository_id must not contain control characters")
+    normalized = value.strip()
+    if not normalized:
+        raise ValidationError("repository_id must be non-empty when supplied")
+    if len(normalized) > MAX_TEXT:
+        raise ValidationError(f"repository_id exceeds {MAX_TEXT} characters")
+    return normalized
 
 
 def _list(value: Any, field: str) -> list[Any]:
@@ -87,7 +105,7 @@ def validate_manifest(raw: Mapping[str, Any]) -> Manifest:
     if not isinstance(raw, Mapping):
         raise ValidationError("manifest must be a JSON object")
 
-    allowed_root = {"scenario", "claims", "checks", "change_request"}
+    allowed_root = {"scenario", "claims", "checks", "change_request", "repository_id"}
     unknown_root = set(raw) - allowed_root
     if unknown_root:
         raise ValidationError(f"unknown manifest fields: {sorted(unknown_root)}")
@@ -99,6 +117,7 @@ def validate_manifest(raw: Mapping[str, Any]) -> Manifest:
         required=False,
         max_length=MAX_CHANGE_REQUEST_CHARS,
     ) or None
+    repository_id = _repository_id(raw.get("repository_id"))
     raw_claims = _list(raw.get("claims"), "claims")
     raw_checks = _list(raw.get("checks"), "checks")
 
@@ -172,6 +191,7 @@ def validate_manifest(raw: Mapping[str, Any]) -> Manifest:
         claims=tuple(claims),
         checks=tuple(checks),
         change_request=change_request,
+        repository_id=repository_id,
     )
 
 
