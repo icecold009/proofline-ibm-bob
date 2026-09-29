@@ -18,19 +18,27 @@ Application logs do not include client IPs, raw paths, query values, request
 headers, manifests, or report contents. The local server suppresses the
 standard-library request line because it includes the raw path and address.
 
-These are application logs. As checked on September 29, 2026, Vercel may
-independently process request, network, function, and platform logs. The Vercel
-project-settings connector did not return project settings during this review,
-so the project's actual request retention period and Firewall rate-limit
-configuration remain unverified.
-Proofline has no application-level rate limiter. Do not claim zero retention or
-platform rate limiting without checking the live Vercel project settings.
-Vercel documents configurable Firewall rate limits in its
-[rate-limiting guide](https://vercel.com/docs/vercel-firewall/vercel-waf/rate-limiting-sdk).
+These are application logs. As checked on September 29, 2026, the Vercel
+dashboard identifies this project under a Hobby team. Vercel documents a
+one-hour retention period for Hobby runtime logs; this is platform log
+retention, not application storage, and does not establish the retention of
+every request, network, or billing record. See Vercel's
+[runtime log limits](https://vercel.com/docs/logs/runtime) and
+[Hobby plan limits](https://vercel.com/docs/plans/hobby).
+
+The live Firewall dashboard showed system mitigations active, zero custom
+project rules, no enforced rules, and no rate-limited requests in its selected
+past-day window. Proofline has no application-level rate limiter, and this
+project has no configured custom Firewall rate limit. System mitigations are
+not a per-project request-rate policy. Do not claim that requests are rate
+limited by this project. Vercel documents configurable Firewall rate limits
+in its [rate-limiting guide](https://vercel.com/docs/vercel-firewall/vercel-waf/rate-limiting-sdk).
 
 Proofline does not write manifests or reports to application storage. Hosted
-requests leave the browser and reach Vercel, so use synthetic or public-safe
-data until platform request retention is confirmed.
+requests leave the browser and reach Vercel, where function runtime logs are
+retained for one hour on the observed Hobby plan. The retention of other
+platform request, network, or billing records is not established here. Use
+synthetic or public-safe data on hosted routes.
 
 ## Production rollback
 
