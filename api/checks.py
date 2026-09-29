@@ -2,14 +2,14 @@
 
 from __future__ import annotations
 
-from http.server import BaseHTTPRequestHandler
-
-from api._common import send_json
+from api._common import SafeApiHandler, send_json
 from proofline.registry import REGISTRY
+from proofline.observability import begin_request
 
 
-class handler(BaseHTTPRequestHandler):  # noqa: N801
+class handler(SafeApiHandler):  # noqa: N801
     def do_GET(self) -> None:  # noqa: N802
+        begin_request(self, "/api/checks")
         checks = [
             {"id": check_id, "evidence_class": definition.evidence_class}
             for check_id, definition in REGISTRY.items()
@@ -17,4 +17,5 @@ class handler(BaseHTTPRequestHandler):  # noqa: N801
         send_json(self, 200, checks)
 
     def do_POST(self) -> None:  # noqa: N802
+        begin_request(self, "/api/checks")
         send_json(self, 405, {"error": "Use GET to list registered checks."})

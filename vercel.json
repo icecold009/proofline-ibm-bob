@@ -13,6 +13,10 @@
       "maxDuration": 10,
       "includeFiles": "fixtures/*.json",
       "excludeFiles": "{tests/**,docs/**,bob_sessions/**,scripts/**,public/**,**/*.pdf,**/*.pptx,.git/**,.pytest_cache/**}"
+    },
+    "api/health.py": {
+      "maxDuration": 10,
+      "excludeFiles": "{tests/**,docs/**,bob_sessions/**,scripts/**,public/**,**/*.pdf,**/*.pptx,.git/**,.pytest_cache/**}"
     }
   },
   "headers": [

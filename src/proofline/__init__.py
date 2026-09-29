@@ -1,5 +1,7 @@
 """Proofline's dependency-light evidence ledger."""
 
+__version__ = "0.1.0"
+
 from .engine import analyze_manifest
 from .model import Manifest, ValidationError, load_manifest, validate_manifest
 from .registry import REGISTRY, CheckDefinition, OperationKind, lookup
@@ -20,4 +22,5 @@ __all__ = [
     "render_markdown",
     "run_check",
     "validate_manifest",
+    "__version__",
 ]

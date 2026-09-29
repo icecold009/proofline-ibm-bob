@@ -24,10 +24,14 @@
   inline scripts and styles. It never runs a check.
 - Hosted adapter: static client in `public/` uses the Vercel API functions in
   `api/` for bounded analysis and report rendering. The API does not run checks
-  or persist application data; it has no application-layer authentication or
-  per-caller rate limit. Effective platform protection and request retention
-  remain unverified. Hosted requests reach Vercel, so use synthetic or
-  public-safe data only.
+  or persist application data. `GET /api/health` reports only status and
+  version. Application request logs contain a generated request ID, a fixed
+  route label, status, response byte count, and duration; they omit client IPs,
+  request paths, query values, and user content. The API has no application-
+  layer authentication or rate limit. Effective platform protection and
+  request retention remain unverified. Hosted requests reach Vercel, so use
+  synthetic or public-safe data only. See `docs/operations.md` for the gap and
+  rollback procedure.
 - Fixtures: synthetic scenarios for repeatable demo verification.
 
 ## Interface and report identity

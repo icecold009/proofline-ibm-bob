@@ -14,6 +14,17 @@ if str(_SOURCE) not in sys.path:
     sys.path.insert(0, str(_SOURCE))
 
 from proofline.model import MAX_MANIFEST_BYTES, Manifest, ValidationError, validate_manifest
+from proofline.observability import log_response
+
+
+class SafeApiHandler(BaseHTTPRequestHandler):
+    """Suppress BaseHTTPRequestHandler's raw path and client-address logs."""
+
+    def log_message(self, format: str, *args: object) -> None:
+        return
+
+    def log_request(self, code: int | str = "-", size: int | str = "-") -> None:
+        return
 
 
 class RequestError(ValueError):
@@ -34,8 +45,11 @@ def send_bytes(
     handler.send_header("Cache-Control", "no-store")
     handler.send_header("X-Content-Type-Options", "nosniff")
     handler.send_header("Referrer-Policy", "no-referrer")
+    request_id = getattr(handler, "_proofline_request_id", "unknown")
+    handler.send_header("X-Request-ID", request_id)
     handler.end_headers()
     handler.wfile.write(body)
+    log_response(handler, status, len(body))
 
 
 def send_json(handler: BaseHTTPRequestHandler, status: int, payload: Any) -> None:
