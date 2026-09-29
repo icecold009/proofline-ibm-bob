@@ -19,7 +19,9 @@
 - Check registry: static mapping from check IDs to safe local commands.
 - Report engine: deterministic status calculation.
 - Local UI: loopback-only manifest intake, read-only report details, status
-  guide, and export controls. It never runs a check.
+  guide, and export controls. The server exposes only the page and two
+  code-owned static assets; a same-origin Content Security Policy blocks
+  inline scripts and styles. It never runs a check.
 - Hosted adapter: static client in `public/` uses the Vercel API functions in
   `api/` for bounded analysis and report rendering. The API does not run checks
   or persist application data; it has no application-layer authentication or
@@ -36,9 +38,10 @@ supported. The only runner entry point is `run_check(check_id)`, and all
 execution parameters and repository-root resolution remain code-owned.
 The src-layout package is built with setuptools through PEP 517 and exposes a
 `proofline` console script. Runtime dependencies remain empty. The installed
-distribution includes the local page and three synthetic fixtures; the web
-command resolves only these code-owned assets from the checkout or install
-data directory.
+distribution includes the local page, its CSS and JavaScript, and three
+synthetic fixtures; the web command resolves only these code-owned assets from
+the checkout or install data directory. Static routes use an exact path
+allowlist and do not map request paths to filesystem paths.
 
 The manifest may include a nullable top-level `repository_id`. A supplied
 value is trimmed, non-empty text of at most 500 characters with no control

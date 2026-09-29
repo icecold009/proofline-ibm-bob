@@ -25,6 +25,8 @@ def _application_root() -> Path:
     install_root = Path(get_path("data"))
     required_files = (
         Path("public") / "index.html",
+        Path("public") / "styles.css",
+        Path("public") / "app.js",
         Path("fixtures") / "local-pass.json",
         Path("fixtures") / "simulated-only.json",
         Path("fixtures") / "hosted-unverified.json",
@@ -43,6 +45,15 @@ _FIXTURES = {
 }
 
 _PAGE_FILE = _ROOT / "public" / "index.html"
+_STATIC_ASSETS = {
+    "/styles.css": (_ROOT / "public" / "styles.css", "text/css; charset=utf-8"),
+    "/app.js": (_ROOT / "public" / "app.js", "text/javascript; charset=utf-8"),
+}
+_CONTENT_SECURITY_POLICY = (
+    "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; "
+    "img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'self'; "
+    "frame-ancestors 'none'"
+)
 
 def _utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
@@ -61,9 +72,7 @@ def _handler() -> type[BaseHTTPRequestHandler]:
             self.send_header("Referrer-Policy", "no-referrer")
             self.send_header(
                 "Content-Security-Policy",
-                "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; "
-                "connect-src 'self'; img-src 'none'; object-src 'none'; base-uri 'none'; "
-                "form-action 'self'; frame-ancestors 'none'",
+                _CONTENT_SECURITY_POLICY,
             )
             self.end_headers()
             self.wfile.write(body)
@@ -82,6 +91,11 @@ def _handler() -> type[BaseHTTPRequestHandler]:
             path = urlsplit(self.path).path
             if path == "/":
                 self._send(200, _PAGE_FILE.read_bytes(), "text/html; charset=utf-8")
+                return
+            asset = _STATIC_ASSETS.get(path)
+            if asset is not None:
+                asset_path, content_type = asset
+                self._send(200, asset_path.read_bytes(), content_type)
                 return
             if path == "/api/checks":
                 checks = [

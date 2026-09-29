@@ -117,8 +117,9 @@ repository also includes a Vercel static/API adapter under `public/` and `api/`.
 An earlier public Vercel demo check used synthetic input. That historical
 check does not verify the current deployment or establish provider behavior
 or production readiness.
-Hosted requests leave the browser and reach Vercel, so use synthetic or
-public-safe data only.
+Hosted requests leave the browser and reach Vercel. The application does not
+persist manifests, but platform request retention has not been verified; use
+synthetic or public-safe data only.
 
 ## Run an allowlisted local check
 

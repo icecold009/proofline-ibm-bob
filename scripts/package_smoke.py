@@ -117,8 +117,21 @@ def main() -> int:
                 process.wait(timeout=5)
                 raise AssertionError(startup + process.stdout.read())
             with urllib.request.urlopen(f"http://127.0.0.1:{port}/", timeout=3) as response:
-                if response.status != 200 or "Proofline" not in response.read().decode("utf-8"):
+                page = response.read().decode("utf-8")
+                if response.status != 200 or "Proofline" not in page:
                     raise AssertionError("Installed web page did not load correctly.")
+                policy = response.headers.get("Content-Security-Policy", "")
+                if "script-src 'self'" not in policy or "style-src 'self'" not in policy or "unsafe-inline" in policy:
+                    raise AssertionError("Installed web page did not receive the strict same-origin CSP.")
+                if "/styles.css" not in page or "/app.js" not in page:
+                    raise AssertionError("Installed web page omitted an external static asset.")
+            for asset_path, content_type in (
+                ("/styles.css", "text/css"),
+                ("/app.js", "text/javascript"),
+            ):
+                with urllib.request.urlopen(f"http://127.0.0.1:{port}{asset_path}", timeout=3) as response:
+                    if response.status != 200 or not response.headers.get("Content-Type", "").startswith(content_type):
+                        raise AssertionError(f"Installed static asset {asset_path} did not load correctly.")
             with urllib.request.urlopen(
                 f"http://127.0.0.1:{port}/api/fixtures/local-pass", timeout=3
             ) as response:
@@ -131,7 +144,7 @@ def main() -> int:
 
     print(f"Python {sys.version.split()[0]}; setuptools {setuptools.__version__}")
     print("Offline temporary install, console/module help and reports without PYTHONPATH: PASS")
-    print("Installed web page and synthetic fixture route from outside the checkout: PASS")
+    print("Installed web page, strict CSP, CSS/JS assets and synthetic fixture route outside the checkout: PASS")
     return 0
 
 

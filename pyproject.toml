@@ -20,7 +20,7 @@ package-dir = {"" = "src"}
 where = ["src"]
 
 [tool.setuptools.data-files]
-"public" = ["public/index.html"]
+"public" = ["public/index.html", "public/styles.css", "public/app.js"]
 "fixtures" = [
   "fixtures/local-pass.json",
   "fixtures/simulated-only.json",
