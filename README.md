@@ -24,6 +24,19 @@ simulated, local, or still unverified.
   application code and its built-in verifier.
 - Run commands from the repository root.
 
+## Install the CLI
+
+From a source checkout, install Proofline into the active Python environment:
+
+```powershell
+python -m pip install .
+```
+
+The `proofline` command and `python -m proofline` expose the same CLI. The
+package has no runtime dependencies; its setuptools build backend is used only
+to build the distribution. Installation includes the local browser page and
+synthetic fixtures so the `web` command remains available outside a checkout.
+
 ## Verify the project
 
 PowerShell:

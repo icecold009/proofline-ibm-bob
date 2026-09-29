@@ -90,6 +90,11 @@ manifest report form. `runner.run_check(check_id)` accepts only a static
 registry ID; its repository root, argv, working directory, environment, and
 timeout are resolved by code.
 
+The `src/` package uses setuptools as its PEP 517 build backend and installs a
+`proofline` console entry point. Application runtime dependencies remain empty.
+The distribution includes only the named local browser page and synthetic
+fixtures needed by the existing `web` command.
+
 ## Determinism
 
 Given the same fixture and check outputs, the report must be byte-for-byte
