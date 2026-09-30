@@ -28,6 +28,10 @@ def _canonical_manifest(manifest: Manifest, checks: list[Check]) -> str:
             for check in checks
         ],
     }
+    # Preserve the exact legacy seed for manifests that omit repository_id.
+    # When present, the normalized metadata differentiates report identities.
+    if manifest.repository_id is not None:
+        payload["repository_id"] = manifest.repository_id
     return json.dumps(payload, sort_keys=True, separators=(",", ":"))
 
 
@@ -148,6 +152,7 @@ def analyze_manifest(
         "generated_at": generated_at,
         "scenario": manifest.scenario,
         "change_request": manifest.change_request,
+        "repository_id": manifest.repository_id,
         "claims": claims,
         "checks": [
             {

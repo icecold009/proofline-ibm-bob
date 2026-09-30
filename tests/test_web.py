@@ -59,6 +59,7 @@ class BrowserIntakeTests(unittest.TestCase):
     def test_browser_report_keeps_declared_pass_conditional_without_running_checks(self):
         manifest = {
             "scenario": "browser-intake-test",
+            "repository_id": " org/example ",
             "claims": [{
                 "id": "claim-1",
                 "title": "A declared local check passes",
@@ -78,6 +79,8 @@ class BrowserIntakeTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(report["claims"][0]["status"], "conditional")
         self.assertEqual(report["checks"][0]["provenance"], "manifest-declared")
+        self.assertEqual(report["repository_id"], "org/example")
+        self.assertIn("Repository: `org/example`", json.loads(body)["markdown"])
 
 
 if __name__ == "__main__":

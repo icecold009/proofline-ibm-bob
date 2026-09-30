@@ -18,12 +18,22 @@ from __future__ import annotations
 
 import html
 import json
+import re
 from typing import Any
 
 
 def _cell(value: Any) -> str:
     text = str(value).replace("\r", " ").replace("\n", " ")
     return text.replace("|", "\\|")
+
+
+def _markdown_code(value: Any) -> str:
+    """Render untrusted text as a literal Markdown code span."""
+    text = str(value).replace("\r", " ").replace("\n", " ")
+    longest_run = max((len(run) for run in re.findall(r"`+", text)), default=0)
+    fence = "`" * (longest_run + 1)
+    padding = " " if text.startswith("`") or text.endswith("`") or text.startswith(" ") or text.endswith(" ") else ""
+    return f"{fence}{padding}{text}{padding}{fence}"
 
 
 def _esc(value: Any) -> str:
@@ -241,6 +251,7 @@ def render_html(report: dict[str, Any]) -> str:
     report_id = _esc(report.get("report_id", ""))
     scenario = _esc(report.get("scenario", ""))
     change_request = _esc(report.get("change_request") or "Not supplied")
+    repository_id = _esc(report.get("repository_id") or "Not supplied")
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -324,6 +335,7 @@ footer {{ margin-top: 2.5rem; padding-top: 1rem;
 </section>
 
 <p><strong>Change request:</strong> {change_request}</p>
+<p><strong>Repository:</strong> {repository_id}</p>
 
 <h2>Summary</h2>
 <table>
@@ -393,6 +405,7 @@ def render_markdown(report: dict[str, Any]) -> str:
         "",
         f"- Report: {_cell(report['report_id'])}",
         f"- Scenario: {_cell(report['scenario'])}",
+        f"- Repository: {_markdown_code(report.get('repository_id') or 'Not supplied')}",
         f"- Change request: {_cell(report.get('change_request') or 'not supplied')}",
         f"- Generated at: {_cell(report['generated_at'] or 'not supplied')}",
         "",

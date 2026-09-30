@@ -90,6 +90,7 @@ class VercelApiTests(unittest.TestCase):
     def test_hosted_report_is_declaration_only_and_does_not_run_checks(self):
         manifest = {
             "scenario": "hosted-api-test",
+            "repository_id": " org/example ",
             "claims": [{
                 "id": "claim-1",
                 "title": "A declared local check passes",
@@ -109,3 +110,5 @@ class VercelApiTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(report["claims"][0]["status"], "conditional")
         self.assertEqual(report["checks"][0]["provenance"], "manifest-declared")
+        self.assertEqual(report["repository_id"], "org/example")
+        self.assertIn("Repository: `org/example`", json.loads(body)["markdown"])
