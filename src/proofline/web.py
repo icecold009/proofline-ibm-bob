@@ -11,6 +11,7 @@ import json
 from datetime import datetime, timezone
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from sysconfig import get_path
 from urllib.parse import parse_qs, urlsplit
 
 from .engine import analyze_manifest
@@ -18,7 +19,23 @@ from .model import MAX_MANIFEST_BYTES, ValidationError, validate_manifest
 from .registry import REGISTRY
 from .report import render_markdown
 
-_ROOT = Path(__file__).resolve().parents[2]
+def _application_root() -> Path:
+    """Locate the source checkout or packaged static data without caller paths."""
+    source_root = Path(__file__).resolve().parents[2]
+    install_root = Path(get_path("data"))
+    required_files = (
+        Path("public") / "index.html",
+        Path("fixtures") / "local-pass.json",
+        Path("fixtures") / "simulated-only.json",
+        Path("fixtures") / "hosted-unverified.json",
+    )
+    for candidate in (source_root, install_root):
+        if all((candidate / relative).is_file() for relative in required_files):
+            return candidate
+    raise RuntimeError("Proofline's packaged browser page or synthetic fixtures are missing.")
+
+
+_ROOT = _application_root()
 _FIXTURES = {
     "local-pass": "local-pass.json",
     "simulated-only": "simulated-only.json",

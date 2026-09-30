@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "proofline"
 version = "0.1.0"
@@ -5,6 +9,23 @@ description = "Deterministic evidence reports for AI release claims."
 license = "MIT"
 requires-python = ">=3.11"
 dependencies = []
+
+[project.scripts]
+proofline = "proofline.__main__:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.data-files]
+"public" = ["public/index.html"]
+"fixtures" = [
+  "fixtures/local-pass.json",
+  "fixtures/simulated-only.json",
+  "fixtures/hosted-unverified.json",
+]
 
 [tool.unittest]
 testpaths = ["tests"]

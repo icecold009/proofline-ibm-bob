@@ -34,6 +34,11 @@ The supported Python minimum is 3.11. The CLI provides `report`, `run-check`,
 `run-report`, and `web`; the legacy positional-manifest report form remains
 supported. The only runner entry point is `run_check(check_id)`, and all
 execution parameters and repository-root resolution remain code-owned.
+The src-layout package is built with setuptools through PEP 517 and exposes a
+`proofline` console script. Runtime dependencies remain empty. The installed
+distribution includes the local page and three synthetic fixtures; the web
+command resolves only these code-owned assets from the checkout or install
+data directory.
 
 The manifest may include a nullable top-level `repository_id`. A supplied
 value is trimmed, non-empty text of at most 500 characters with no control
