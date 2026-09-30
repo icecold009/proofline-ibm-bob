@@ -24,7 +24,8 @@ check required.
 ## MVP acceptance boundary
 
 - Enter one bounded change request or short diff summary.
-- Load or edit one small evidence manifest through the loopback browser UI or CLI.
+- Load or edit one small evidence manifest through the local loopback UI, the
+  hosted Vercel client, or the CLI.
 - Classify claims into six evidence classes.
 - Show explicit statuses: proven, conditional, simulated, unverified, or
   blocked.
@@ -35,9 +36,11 @@ check required.
 - Export JSON and Markdown.
 - Work fully with synthetic fixtures and no live provider dependency.
 
-The browser UI is loopback-only. It accepts bounded manifests, renders evidence
-details, and does not execute checks, persist submissions, or call external
-services.
+The local loopback UI and hosted Vercel client accept bounded manifests and
+render evidence details without executing checks or persisting submissions.
+The hosted client sends requests to Vercel; platform request retention is
+unverified, so use synthetic or public-safe data only. Neither browser surface
+calls an external evidence provider.
 
 ## Explicit cuts
 

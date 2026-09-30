@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import http.client
+import io
 import json
 import threading
+import time
 import unittest
+from contextlib import redirect_stdout
 from http.server import HTTPServer
 from unittest.mock import patch
 
@@ -73,11 +76,54 @@ class BrowserIntakeTests(unittest.TestCase):
                 self.assertEqual(status, 404)
 
     def test_html_and_json_responses_receive_strict_csp(self):
-        for path in ("/", "/api/checks", "/api/fixtures/local-pass"):
+        for path in ("/", "/api/checks", "/api/health", "/api/fixtures/local-pass"):
             with self.subTest(path=path):
                 status, _, headers = self.request_with_headers("GET", path)
                 self.assertEqual(status, 200)
                 self.assertIn("default-src 'none'", headers["Content-Security-Policy"])
+
+    def test_health_exposes_only_status_and_version(self):
+        status, body, headers = self.request_with_headers("GET", "/api/health")
+        payload = json.loads(body)
+        self.assertEqual(status, 200)
+        self.assertEqual(payload, {"status": "ok", "version": "0.1.0"})
+        self.assertEqual(set(payload), {"status", "version"})
+        self.assertTrue(headers["X-Request-ID"])
+
+    def test_local_operational_log_uses_fixed_route_and_no_query_or_client_data(self):
+        output = io.StringIO()
+        with redirect_stdout(output):
+            status, body, headers = self.request_with_headers(
+                "GET", "/api/fixtures?name=simulated-only&private_marker=never-log-this"
+            )
+            expected_request_id = headers["X-Request-ID"]
+            deadline = time.monotonic() + 1
+            while expected_request_id not in output.getvalue() and time.monotonic() < deadline:
+                time.sleep(0.005)
+        records = [json.loads(line) for line in output.getvalue().splitlines() if line]
+        record = next((item for item in records if item["request_id"] == expected_request_id), None)
+        self.assertIsNotNone(record, "the response log for this request was not captured")
+        self.assertEqual(status, 200)
+        self.assertEqual(record["route"], "/api/fixtures")
+        self.assertEqual(record["status"], 200)
+        self.assertEqual(record["response_bytes"], len(body))
+        self.assertGreaterEqual(record["duration_ms"], 0)
+        self.assertEqual(record["request_id"], expected_request_id)
+        self.assertEqual(set(record), {"request_id", "route", "status", "response_bytes", "duration_ms"})
+        self.assertNotIn("private_marker", output.getvalue())
+        self.assertNotIn("127.0.0.1", output.getvalue())
+
+    def test_unsupported_method_uses_safe_json_response_and_log(self):
+        output = io.StringIO()
+        with redirect_stdout(output):
+            status, body, _ = self.request_with_headers("PUT", "/private?marker=do-not-log")
+        record = json.loads(output.getvalue())
+        self.assertEqual(status, 501)
+        self.assertEqual(json.loads(body), {"error": "The request could not be processed."})
+        self.assertEqual(record["route"], "other")
+        self.assertEqual(record["status"], 501)
+        self.assertNotIn("private", output.getvalue())
+        self.assertNotIn("do-not-log", output.getvalue())
 
     def test_check_options_come_from_static_registry(self):
         status, body = self.request("GET", "/api/checks")

@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-from http.server import BaseHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import parse_qs, urlsplit
 
-from api._common import _ROOT, send_bytes, send_json
+from api._common import _ROOT, SafeApiHandler, send_bytes, send_json
+from proofline.observability import begin_request
 
 _FIXTURES = {
     "local-pass": "local-pass.json",
@@ -15,8 +15,9 @@ _FIXTURES = {
 }
 
 
-class handler(BaseHTTPRequestHandler):  # noqa: N801
+class handler(SafeApiHandler):  # noqa: N801
     def do_GET(self) -> None:  # noqa: N802
+        begin_request(self, "/api/fixtures")
         name = parse_qs(urlsplit(self.path).query).get("name", [""])[0]
         filename = _FIXTURES.get(name)
         if filename is None:
@@ -26,4 +27,5 @@ class handler(BaseHTTPRequestHandler):  # noqa: N801
         send_bytes(self, 200, body, "application/json; charset=utf-8")
 
     def do_POST(self) -> None:  # noqa: N802
+        begin_request(self, "/api/fixtures")
         send_json(self, 405, {"error": "Use GET to load a synthetic scenario."})

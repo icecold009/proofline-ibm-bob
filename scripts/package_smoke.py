@@ -132,6 +132,12 @@ def main() -> int:
                 with urllib.request.urlopen(f"http://127.0.0.1:{port}{asset_path}", timeout=3) as response:
                     if response.status != 200 or not response.headers.get("Content-Type", "").startswith(content_type):
                         raise AssertionError(f"Installed static asset {asset_path} did not load correctly.")
+            with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/health", timeout=3) as response:
+                health = json.loads(response.read())
+                if response.status != 200 or health != {"status": "ok", "version": "0.1.0"}:
+                    raise AssertionError("Installed health route exposed unexpected or missing metadata.")
+                if not response.headers.get("X-Request-ID"):
+                    raise AssertionError("Installed health route omitted its request ID.")
             with urllib.request.urlopen(
                 f"http://127.0.0.1:{port}/api/fixtures/local-pass", timeout=3
             ) as response:
@@ -144,7 +150,7 @@ def main() -> int:
 
     print(f"Python {sys.version.split()[0]}; setuptools {setuptools.__version__}")
     print("Offline temporary install, console/module help and reports without PYTHONPATH: PASS")
-    print("Installed web page, strict CSP, CSS/JS assets and synthetic fixture route outside the checkout: PASS")
+    print("Installed web page, strict CSP, CSS/JS assets, health metadata and synthetic fixture route outside the checkout: PASS")
     return 0
 
 

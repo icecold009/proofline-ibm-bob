@@ -6,8 +6,8 @@
 
 - Accept one bounded change request.
 - Let a user choose a synthetic scenario or enter one claim in a guided form in
-  the loopback browser interface; retain advanced JSON edit/upload for multiple
-  claims.
+  the local loopback browser interface or hosted Vercel client; retain advanced
+  JSON edit/upload for multiple claims.
 - Reject oversized or malformed manifests.
 - Assign a stable, editable ID to the guided claim; validate IDs in advanced
   manifests.

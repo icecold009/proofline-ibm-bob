@@ -121,6 +121,10 @@ Hosted requests leave the browser and reach Vercel. The application does not
 persist manifests, but platform request retention has not been verified; use
 synthetic or public-safe data only.
 
+The hosted `GET /api/health` response exposes only service status and version.
+Operational log fields and the manual production rollback boundary are
+documented in [docs/operations.md](docs/operations.md).
+
 ## Run an allowlisted local check
 
 ```powershell
@@ -162,6 +166,10 @@ or per-caller rate limit; effective platform protection and request retention
 are unverified, so use synthetic or public-safe data only. A public Vercel demo
 was checked with synthetic input in an earlier review; that is historical
 evidence and does not establish the current deployment state.
+The hosted health route reports status and application version only. App-level
+request logs omit request bodies, query values, paths, and client addresses;
+see [docs/operations.md](docs/operations.md) for the verified fields, platform
+retention status, and the approval-gated rollback procedure.
 Manifest-declared results remain conditional; `run-report` is the explicit path
 that can produce runner-observed local evidence. Reports expose evidence source,
 provenance, and observation time. A seven-slide editable pitch deck and PDF
