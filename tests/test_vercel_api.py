@@ -79,6 +79,14 @@ class VercelApiTests(unittest.TestCase):
             ],
         )
 
+    def test_vercel_config_uses_self_only_script_and_style_sources(self):
+        config = json.loads((_ROOT / "vercel.json").read_text(encoding="utf-8"))
+        headers = config["headers"][0]["headers"]
+        csp = next(header["value"] for header in headers if header["key"] == "Content-Security-Policy")
+        self.assertIn("script-src 'self'", csp)
+        self.assertIn("style-src 'self'", csp)
+        self.assertNotIn("unsafe-inline", csp)
+
     def test_fixture_endpoint_is_whitelisted(self):
         status, body = self.request("GET", "/api/fixtures?name=simulated-only")
         self.assertEqual(status, 200)

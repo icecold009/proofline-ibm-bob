@@ -1,325 +1,193 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light">
-<title>Proofline · evidence report</title>
-<style>
-:root{font-family:system-ui,"Segoe UI",sans-serif;color:#172033;background:#f5f7fb;font-size:16px;line-height:1.55}
-*{box-sizing:border-box}body{margin:0}main{max-width:980px;margin:auto;padding:clamp(1rem,4vw,2.5rem)}
-h1{font-size:clamp(1.8rem,4vw,2.5rem);line-height:1.15;margin:.25rem 0}.intro{color:#4b5568;max-width:66ch}
-.panel,.claim{background:white;border:1px solid #dce2ec;border-radius:12px;padding:1rem 1.2rem;margin:1rem 0}
-label{display:block;font-weight:650;margin:.75rem 0 .3rem}select,input[type=file],input[type=text],textarea{font:inherit;width:100%;padding:.7rem;border:1px solid #aeb9ca;border-radius:7px;background:white;color:inherit}
-textarea{min-height:16rem;font: .86rem/1.45 ui-monospace,Consolas,monospace;resize:vertical}
-.guided-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.1rem 1rem}.field-help{margin:.25rem 0;color:#586477;font-size:.88rem}
-.row{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap;margin-top:.9rem}button{font:inherit;font-weight:650;border:1px solid #174db3;border-radius:7px;background:#1d5fd0;color:white;padding:.65rem 1rem;cursor:pointer}
-button.secondary{background:white;color:#174db3}button:disabled{opacity:.6;cursor:wait}:focus-visible{outline:3px solid #f0a500;outline-offset:2px}
-.error{color:#991b1b}.muted{color:#586477;font-size:.9rem}.summary{border-left:4px solid #1d5fd0;background:#eaf2ff;padding:.9rem 1rem;border-radius:5px}
-.counts{display:flex;gap:.5rem;flex-wrap:wrap;margin:.8rem 0}.count,.badge{display:inline-block;border-radius:999px;padding:.12rem .6rem;font-size:.85rem;font-weight:700}
-.count{background:#eef1f6;color:#28344a}.proven{background:#d1fae5;color:#065f46}.conditional{background:#fef3c7;color:#92400e}.simulated{background:#dbeafe;color:#1e40af}.unverified{background:#e5e7eb;color:#374151}.blocked,.fail{background:#fee2e2;color:#991b1b}.pass{background:#d1fae5;color:#065f46}.fixture{background:#dbeafe;color:#1e40af}
-.claim h3{margin:.1rem 0 .5rem}.claim dl,.evidence dl{display:grid;grid-template-columns:minmax(8rem,10rem) 1fr;gap:.25rem .75rem;margin:.6rem 0}.claim dt,.evidence dt{font-weight:650;color:#46536a}.claim dd,.evidence dd{margin:0;overflow-wrap:anywhere}
-.evidence{border:1px solid #e1e6ef;padding:.55rem .7rem;border-radius:7px;margin:.4rem 0}.evidence summary,details summary{cursor:pointer;font-weight:650}details{margin:.75rem 0}pre{white-space:pre-wrap;overflow-wrap:anywhere}
-[hidden]{display:none!important}footer{border-top:1px solid #dce2ec;margin-top:2rem;padding-top:1rem;color:#586477;font-size:.85rem}
-@media(max-width:600px){.guided-grid,.claim dl,.evidence dl{grid-template-columns:1fr}.claim dt,.evidence dt{margin-top:.45rem}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="referrer" content="no-referrer">
+  <title>Proofline · evidence before release</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
 </head>
-<body><main>
-<header>
-  <p class="muted" id="runtime-label">Evidence analysis</p>
-  <h1>Proofline</h1>
-  <p class="intro" id="runtime-intro">See what supplied release evidence supports, what remains uncertain, and what to check next. This preview uses synthetic examples and does not run commands.</p>
-</header>
-<section class="panel" aria-labelledby="input-title">
-  <h2 id="input-title">Describe the claim to review</h2>
-  <p class="field-help">Use synthetic or public-safe evidence only. Proofline does not save manifest contents; the hosting service may process request metadata.</p>
-  <label for="change-request">Change request or short diff summary (optional, max 2,000 characters)</label>
-  <textarea id="change-request" maxlength="2000" placeholder="Example: Add the offline report export. Summarize the intended code change; do not paste secrets."></textarea>
-  <label for="sample">Start with a synthetic example</label>
-  <select id="sample">
-    <option value="local-pass">Declared local pass</option>
-    <option value="simulated-only">Simulated evidence</option>
-    <option value="hosted-unverified">Missing hosted evidence</option>
-  </select>
-  <label for="entry-mode">How do you want to enter evidence?</label>
-  <select id="entry-mode"><option value="guided">Guided single claim</option><option value="advanced">Advanced JSON manifest</option></select>
-  <div id="guided-entry">
-    <div class="guided-grid">
-      <div><label for="scenario-name">Scenario name</label><input id="scenario-name" type="text" maxlength="500" value="my-change"></div>
-      <div><label for="claim-id">Stable claim ID</label><input id="claim-id" type="text" maxlength="500" value="claim-1"><p class="field-help">Starts at claim-1; change it if this claim needs a permanent identifier.</p></div>
-      <div><label for="claim-title">What are you claiming?</label><input id="claim-title" type="text" maxlength="500" placeholder="Example: The local report export works"></div>
-      <div><label for="evidence-class">Evidence class</label><select id="evidence-class"><option>local</option><option>browser</option><option>hosted</option><option>provider</option><option>data</option><option>security</option></select></div>
-    </div>
-    <label for="check-id">Supporting check (optional)</label>
-    <select id="check-id"><option value="">No check supplied</option></select>
-    <p class="field-help">Only checks listed in Proofline’s code-owned registry are selectable. Choosing one does not run it.</p>
-    <div id="declared-check" hidden>
-      <div class="guided-grid">
-        <div><label for="check-result">Declared result</label><select id="check-result"><option>pass</option><option>fail</option><option>fixture</option><option>blocked</option></select></div>
-        <div><label for="check-class">Check evidence class</label><select id="check-class"><option>local</option><option>browser</option><option>hosted</option><option>provider</option><option>data</option><option>security</option></select></div>
+<body>
+  <main class="app-shell">
+    <header class="page-header">
+      <div class="brand-mark" aria-hidden="true">P</div>
+      <div class="brand-copy">
+        <p class="eyebrow" id="runtime-label">Local evidence analysis</p>
+        <h1>Proofline</h1>
+        <p class="intro" id="runtime-intro">See what supplied release evidence supports, what remains uncertain, and what to check next.</p>
       </div>
-      <label for="check-source">Source or limitation</label><input id="check-source" type="text" maxlength="500" value="User-declared result; not run by the browser">
-      <p class="field-help">The browser records this as a declaration. It never runs commands; a declared pass stays conditional until the explicit local CLI runner observes it.</p>
+      <aside class="boundary-note" aria-label="Data and execution boundary">
+        <span class="boundary-label">Synthetic evidence</span>
+        <p id="runtime-boundary">The loopback app analyzes manifests in memory. It never runs checks or saves submissions.</p>
+      </aside>
+    </header>
+
+    <ol class="workflow" aria-label="Workflow">
+      <li class="workflow-step is-current" id="step-change" aria-current="step"><span class="step-number">1</span><span>Change</span></li>
+      <li class="workflow-step" id="step-evidence"><span class="step-number">2</span><span>Evidence</span></li>
+      <li class="workflow-step" id="step-report"><span class="step-number">3</span><span>Report</span></li>
+    </ol>
+
+    <section class="panel" aria-labelledby="change-title">
+      <div class="section-heading">
+        <p class="eyebrow">01 · Change</p>
+        <h2 id="change-title">What changed?</h2>
+        <p class="section-copy">Name the change you want to assess. Keep this summary bounded and free of confidential details.</p>
+      </div>
+      <label for="change-request">Change request or short diff summary <span class="optional">Optional · 2,000 characters max</span></label>
+      <textarea id="change-request" class="short-text" maxlength="2000" placeholder="Example: Add the offline report export."></textarea>
+      <div class="field-block sample-field">
+        <label for="sample">Start with a synthetic example</label>
+        <select id="sample">
+          <option value="local-pass">Declared local pass</option>
+          <option value="simulated-only">Simulated evidence</option>
+          <option value="hosted-unverified">Missing hosted evidence</option>
+        </select>
+        <p class="field-help">Examples use synthetic evidence and can be edited before analysis.</p>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="evidence-title">
+      <div class="section-heading">
+        <p class="eyebrow">02 · Evidence</p>
+        <h2 id="evidence-title">What supports the claim?</h2>
+        <p class="section-copy">Describe one claim and its evidence. Selecting a registered check records a declaration; it does not execute it.</p>
+      </div>
+
+      <div class="form-grid">
+        <div class="field-block">
+          <label for="scenario-name">Scenario name</label>
+          <input id="scenario-name" type="text" maxlength="500" value="my-change">
+        </div>
+        <div class="field-block">
+          <label for="claim-id">Stable claim ID</label>
+          <input id="claim-id" type="text" maxlength="500" value="claim-1">
+          <p class="field-help">Keep this identifier stable across reports when it represents the same claim.</p>
+        </div>
+        <div class="field-block field-span">
+          <label for="claim-title">What are you claiming?</label>
+          <input id="claim-title" type="text" maxlength="500" placeholder="Example: The local report export works">
+        </div>
+        <div class="field-block">
+          <label for="evidence-class">Evidence class</label>
+          <select id="evidence-class">
+            <option>local</option><option>browser</option><option>hosted</option>
+            <option>provider</option><option>data</option><option>security</option>
+          </select>
+        </div>
+        <div class="field-block">
+          <label for="limitation">Known limitation <span class="optional">Optional</span></label>
+          <input id="limitation" type="text" maxlength="500" placeholder="What does this evidence not prove?">
+        </div>
+      </div>
+
+      <div class="field-block check-block">
+        <label for="check-id">Supporting check <span class="optional">Optional</span></label>
+        <select id="check-id"><option value="">No check supplied</option></select>
+        <p class="field-help">Only checks in Proofline’s code-owned registry are selectable. The browser never runs them.</p>
+      </div>
+
+      <div id="declared-check" class="declared-check" hidden>
+        <div class="form-grid">
+          <div class="field-block">
+            <label for="check-result">Declared result</label>
+            <select id="check-result"><option>pass</option><option>fail</option><option>fixture</option><option>blocked</option></select>
+          </div>
+          <div class="field-block">
+            <label for="check-class">Check evidence class</label>
+            <select id="check-class">
+              <option>local</option><option>browser</option><option>hosted</option>
+              <option>provider</option><option>data</option><option>security</option>
+            </select>
+          </div>
+          <div class="field-block field-span">
+            <label for="check-source">Source or limitation</label>
+            <input id="check-source" type="text" maxlength="500" value="User-declared result; not run by the browser">
+          </div>
+        </div>
+        <p class="field-help">A declared pass stays conditional until the explicit local CLI runner observes it.</p>
+      </div>
+
+      <details id="advanced-panel" class="advanced-panel">
+        <summary>Advanced JSON manifest</summary>
+        <div class="advanced-content">
+          <p class="field-help">Use this for multiple claims or fields outside the guided form. The manifest is processed in memory. Maximum size: 256 KB.</p>
+          <label for="manifest">Evidence manifest (JSON)</label>
+          <textarea id="manifest" class="manifest-editor" spellcheck="false" aria-describedby="manifest-help"></textarea>
+          <p class="field-help" id="manifest-help">Do not enter secrets, credentials, personal data, or confidential material.</p>
+          <label for="file">Load a manifest file</label>
+          <input id="file" type="file" accept=".json,application/json">
+        </div>
+      </details>
+    </section>
+
+    <div class="action-panel">
+      <p id="loading" class="loading-state" role="status" hidden>Analyzing the supplied evidence…</p>
+      <div class="button-row">
+        <button id="analyze" class="button-primary" type="button">Analyze evidence</button>
+        <button id="clear" class="button-secondary" type="button">Clear report</button>
+      </div>
+      <p id="error" class="error-message" role="alert" hidden></p>
     </div>
-    <label for="limitation">Known limitation (optional)</label><input id="limitation" type="text" maxlength="500" placeholder="What does this evidence not prove?">
-  </div>
-  <div id="advanced-entry" hidden>
-    <label for="manifest">Evidence manifest (JSON)</label>
-    <textarea id="manifest" spellcheck="false" aria-describedby="manifest-help"></textarea>
-    <p class="muted" id="manifest-help">Advanced mode supports multiple claims. Proofline processes the manifest in memory and does not save its contents. Do not enter secrets, credentials, or personal/private data. The hosting service may process request metadata. Maximum size: 256 KB.</p>
-    <label for="file">Load a manifest file</label>
-    <input id="file" type="file" accept=".json,application/json">
-  </div>
-  <div class="row"><button id="analyze" type="button">Analyze evidence</button><button id="clear" class="secondary" type="button">Clear report</button></div>
-  <p id="error" class="error" role="alert" hidden></p>
-</section>
-<section id="result" hidden aria-live="polite" aria-labelledby="result-title">
-  <div class="panel">
-    <h2 id="result-title">Report summary</h2>
-    <p id="request-summary" class="muted"></p>
-    <p class="summary" id="outcome"></p>
-    <div class="counts" id="counts" aria-label="Claim counts by status"></div>
-    <p class="muted" id="meta"></p>
-  </div>
-  <h2>Claims and evidence</h2>
-  <div id="claims"></div>
-  <details class="panel"><summary>Status guide</summary>
-    <ul>
-      <li><strong>Proven:</strong> a referenced allowlisted check ran and passed in the claim's evidence class.</li>
-      <li><strong>Conditional:</strong> a result was declared but not runner-verified, or evidence came from a different class.</li>
-      <li><strong>Simulated:</strong> the evidence is a synthetic fixture, not live behavior.</li>
-      <li><strong>Unverified:</strong> evidence is missing or a required check failed.</li>
-      <li><strong>Blocked:</strong> a reference is missing or is not in the static registry.</li>
-    </ul>
-  </details>
-  <details class="panel"><summary>Method and limitations</summary><ul id="notes"></ul>
-    <p class="muted">This report summarizes supplied evidence. It does not certify hosted behavior or production readiness.</p>
-  </details>
-  <div class="row"><button id="copy-md" type="button">Copy Markdown</button><button id="download-json" class="secondary" type="button">Download JSON</button><button id="download-md" class="secondary" type="button">Download Markdown</button></div>
-  <p id="copy-state" class="muted" role="status" aria-live="polite"></p>
-  <details class="panel"><summary>Markdown preview</summary><textarea id="markdown-preview" readonly aria-label="Markdown report preview"></textarea></details>
-</section>
-<footer id="runtime-footer">Proofline · evidence report · supplied manifests are processed in memory.</footer>
-</main>
-<script>
-(() => {
-  'use strict';
-  const sample = document.getElementById('sample');
-  const manifest = document.getElementById('manifest');
-  const fileInput = document.getElementById('file');
-  const entryMode = document.getElementById('entry-mode');
-  const checkId = document.getElementById('check-id');
-  const analyzeButton = document.getElementById('analyze');
-  const errorBox = document.getElementById('error');
-  const resultSection = document.getElementById('result');
-  let latest = null;
-  const isLoopback = ['127.0.0.1', 'localhost'].includes(location.hostname);
-  document.getElementById('runtime-label').textContent = isLoopback ? 'Local evidence analysis' : 'Hosted evidence analysis';
-  document.getElementById('runtime-intro').textContent = isLoopback
-    ? 'See what supplied release evidence supports, what remains uncertain, and what to check next. This local preview uses synthetic examples and does not run commands.'
-    : 'See what supplied release evidence supports, what remains uncertain, and what to check next. This hosted demo uses synthetic examples and does not run commands. Do not submit confidential or personal data.';
-  document.getElementById('runtime-footer').textContent = isLoopback
-    ? 'Proofline · local evidence report · supplied manifests are processed in memory.'
-    : 'Proofline · hosted demo · supplied manifests are processed in memory and not saved by Proofline.';
 
-  function setEntryMode() {
-    const guided = entryMode.value === 'guided';
-    document.getElementById('guided-entry').hidden = !guided;
-    document.getElementById('advanced-entry').hidden = guided;
-  }
-  function setCheckSelection(id) {
-    checkId.value = [...checkId.options].some(option => option.value === id) ? id : '';
-    const details = document.getElementById('declared-check');
-    details.hidden = !checkId.value;
-    if (!checkId.value) return;
-    const selected = checkId.selectedOptions[0];
-    document.getElementById('check-class').value = selected.dataset.evidenceClass || 'local';
-    const fixture = checkId.value === 'fixture-simulated-telemetry';
-    document.getElementById('check-result').value = fixture ? 'fixture' : 'pass';
-    document.getElementById('check-source').value = fixture
-      ? 'Synthetic fixture declaration; not live telemetry'
-      : 'User-declared result; not run by the browser';
-  }
-  function populateGuided(raw) {
-    document.getElementById('scenario-name').value = raw.scenario || 'my-change';
-    const claim = raw.claims && raw.claims[0] || {};
-    document.getElementById('claim-id').value = claim.id || 'claim-1';
-    document.getElementById('claim-title').value = claim.title || '';
-    document.getElementById('evidence-class').value = claim.evidence_class || 'local';
-    document.getElementById('limitation').value = claim.limitation || '';
-    const check = raw.checks && raw.checks.find(item => (claim.evidence_refs || []).includes(item.id));
-    setCheckSelection(check ? check.id : '');
-    if (check) {
-      document.getElementById('check-result').value = check.result || 'pass';
-      document.getElementById('check-class').value = check.evidence_class || 'local';
-      document.getElementById('check-source').value = check.source || '';
-    }
-    document.getElementById('change-request').value = raw.change_request || '';
-  }
-  function buildGuidedManifest() {
-    const id = checkId.value;
-    const claim = {
-      id: document.getElementById('claim-id').value.trim(),
-      title: document.getElementById('claim-title').value.trim(),
-      evidence_class: document.getElementById('evidence-class').value,
-      evidence_refs: id ? [id] : []
-    };
-    const limitation = document.getElementById('limitation').value.trim();
-    if (limitation) claim.limitation = limitation;
-    const raw = {
-      scenario: document.getElementById('scenario-name').value.trim(),
-      claims: [claim],
-      checks: id ? [{
-        id,
-        result: document.getElementById('check-result').value,
-        evidence_class: document.getElementById('check-class').value,
-        source: document.getElementById('check-source').value.trim()
-      }] : []
-    };
-    const request = document.getElementById('change-request').value.trim();
-    if (request) raw.change_request = request;
-    return raw;
-  }
+    <section id="empty-report" class="empty-state" aria-labelledby="empty-title">
+      <p class="eyebrow">03 · Report</p>
+      <h2 id="empty-title">Your report will appear here</h2>
+      <p>Analyze the supplied example to see its status, evidence limits, and next action.</p>
+    </section>
 
-  function node(tag, text, className) {
-    const element = document.createElement(tag);
-    if (text !== undefined) element.textContent = String(text);
-    if (className) element.className = className;
-    return element;
-  }
-  async function loadSample() {
-    errorBox.hidden = true;
-    try {
-      const response = await fetch('/api/fixtures?name=' + encodeURIComponent(sample.value), {cache:'no-store'});
-      if (!response.ok) throw new Error('Sample could not be loaded.');
-      manifest.value = JSON.stringify(await response.json(), null, 2);
-      populateGuided(JSON.parse(manifest.value));
-      entryMode.value = 'guided'; setEntryMode();
-      fileInput.value = '';
-    } catch (error) { showError(error.message); }
-  }
-  function showError(message) {
-    errorBox.textContent = message;
-    errorBox.hidden = false;
-  }
-  function download(name, content, type) {
-    const url = URL.createObjectURL(new Blob([content], {type}));
-    const anchor = document.createElement('a');
-    anchor.href = url; anchor.download = name; anchor.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
-  function render(data) {
-    latest = data;
-    const report = data.report;
-    document.getElementById('markdown-preview').value = data.markdown;
-    const counts = report.summary;
-    const proven = counts.proven || 0;
-    const total = report.claims.length;
-    document.getElementById('outcome').textContent = proven
-      ? `Proofline observed evidence for ${proven} of ${total} claims within their declared evidence classes.`
-      : 'No claim has runner-observed evidence in its declared evidence class yet.';
-    const countBox = document.getElementById('counts');
-    countBox.replaceChildren();
-    for (const [status, count] of Object.entries(counts)) {
-      const item = node('span', `${status}: ${count}`, 'count ' + status);
-      countBox.append(item);
-    }
-    document.getElementById('meta').textContent = `Scenario: ${report.scenario} · Report ${report.report_id} · Generated ${report.generated_at || 'not recorded'}`;
-    const request = report.change_request || 'No change request supplied.';
-    document.getElementById('request-summary').textContent = `Change request: ${request}`;
+    <section id="result" class="result-area" hidden aria-labelledby="result-title" tabindex="-1">
+      <div class="panel report-overview">
+        <p class="eyebrow">03 · Report</p>
+        <h2 id="result-title" tabindex="-1">Evidence report</h2>
+        <p id="request-summary" class="report-request"></p>
+        <p id="outcome" class="outcome-summary"></p>
+        <div class="next-action" aria-labelledby="next-action-label">
+          <p id="next-action-label" class="next-action-label">Next action</p>
+          <p id="next-action"></p>
+        </div>
+        <div class="counts" id="counts" aria-label="Claim counts by status"></div>
+        <p class="report-meta" id="meta"></p>
+      </div>
 
-    const byId = new Map(report.checks.map(check => [check.id, check]));
-    const claimList = document.getElementById('claims');
-    claimList.replaceChildren();
-    for (const claim of report.claims) {
-      const card = node('article', undefined, 'claim');
-      const heading = node('h3', claim.title);
-      const badge = node('span', claim.status.toUpperCase(), 'badge ' + claim.status);
-      heading.append(' ', badge); card.append(heading);
-      const dl = document.createElement('dl');
-      for (const [label, value] of [['Evidence class', claim.evidence_class], ['Limitation', claim.limitation], ['Next action', claim.next_action]]) {
-        dl.append(node('dt', label), node('dd', value || 'Not recorded'));
-      }
-      card.append(dl);
-      const refsHeading = node('h4', 'Evidence details'); card.append(refsHeading);
-      if (!claim.evidence_refs.length) card.append(node('p', 'No supporting evidence was supplied.', 'muted'));
-      for (const ref of claim.evidence_refs) {
-        const check = byId.get(ref);
-        const details = document.createElement('details'); details.className = 'evidence';
-        const summary = node('summary', check ? `${ref} · ${check.result}` : `${ref} · missing`);
-        details.append(summary);
-        if (check) {
-          const evidenceDl = document.createElement('dl');
-          for (const [label, value] of [['Result', check.result], ['Evidence class', check.evidence_class], ['Source', check.source], ['Provenance', check.provenance], ['Observed at', check.observed_at || 'Not recorded']]) {
-            evidenceDl.append(node('dt', label), node('dd', value));
-          }
-          details.append(evidenceDl);
-        }
-        card.append(details);
-      }
-      claimList.append(card);
-    }
-    const notes = document.getElementById('notes'); notes.replaceChildren();
-    for (const note of report.security_notes) notes.append(node('li', note));
-    resultSection.hidden = false;
-  }
-  sample.addEventListener('change', loadSample);
-  entryMode.addEventListener('change', setEntryMode);
-  checkId.addEventListener('change', () => setCheckSelection(checkId.value));
-  document.getElementById('clear').addEventListener('click', () => { latest = null; resultSection.hidden = true; errorBox.hidden = true; });
-  fileInput.addEventListener('change', async () => {
-    const file = fileInput.files && fileInput.files[0];
-    if (!file) return;
-    if (file.size > 262144) { showError('The file exceeds the 256 KB size limit.'); fileInput.value = ''; return; }
-    try { manifest.value = await file.text(); sample.selectedIndex = -1; entryMode.value = 'advanced'; setEntryMode(); errorBox.hidden = true; }
-    catch { showError('The file could not be read.'); }
-  });
-  analyzeButton.addEventListener('click', async () => {
-    errorBox.hidden = true; analyzeButton.disabled = true; analyzeButton.textContent = 'Analyzing…';
-    try {
-      const parsed = entryMode.value === 'guided' ? buildGuidedManifest() : JSON.parse(manifest.value);
-      if (entryMode.value === 'advanced') {
-        const request = document.getElementById('change-request').value.trim();
-        if (request) parsed.change_request = request;
-        else delete parsed.change_request;
-      }
-      const response = await fetch('/api/report', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(parsed), cache:'no-store'});
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || 'Manifest could not be analyzed.');
-      render(data);
-    } catch (error) { showError(error.message || 'Manifest could not be analyzed.'); }
-    finally { analyzeButton.disabled = false; analyzeButton.textContent = 'Analyze evidence'; }
-  });
-  document.getElementById('download-json').addEventListener('click', () => { if (latest) download('proofline-report.json', JSON.stringify(latest.report, null, 2), 'application/json'); });
-  document.getElementById('download-md').addEventListener('click', () => { if (latest) download('proofline-report.md', latest.markdown, 'text/markdown'); });
-  document.getElementById('copy-md').addEventListener('click', async () => {
-    if (!latest) return;
-    const preview = document.getElementById('markdown-preview');
-    try {
-      if (!navigator.clipboard || !navigator.clipboard.writeText) throw new Error('unavailable');
-      await navigator.clipboard.writeText(latest.markdown);
-      document.getElementById('copy-state').textContent = 'Markdown copied.';
-    } catch {
-      preview.closest('details').open = true; preview.focus(); preview.select();
-      document.getElementById('copy-state').textContent = 'Markdown selected. Copy it, or use Download Markdown.';
-    }
-  });
-  async function initialize() {
-    try {
-      const response = await fetch('/api/checks', {cache:'no-store'});
-      if (!response.ok) throw new Error('The check registry could not be loaded.');
-      for (const check of await response.json()) {
-        const option = node('option', check.id);
-        option.value = check.id;
-        option.dataset.evidenceClass = check.evidence_class;
-        checkId.append(option);
-      }
-      setEntryMode();
-      await loadSample();
-    } catch (error) { showError(error.message); }
-  }
-  initialize();
-})();
-</script>
+      <h2 class="claims-heading">Claims and evidence</h2>
+      <div id="claims"></div>
+
+      <details class="panel report-details">
+        <summary>Status guide</summary>
+        <ul>
+          <li><strong>Proven:</strong> a referenced allowlisted check ran and passed in the claim’s evidence class.</li>
+          <li><strong>Conditional:</strong> a result was declared but not runner-verified, or evidence came from a different class.</li>
+          <li><strong>Simulated:</strong> the evidence is a synthetic fixture, not live behavior.</li>
+          <li><strong>Unverified:</strong> evidence is missing or a required check failed.</li>
+          <li><strong>Blocked:</strong> a reference is missing or is not in the static registry.</li>
+        </ul>
+      </details>
+      <details class="panel report-details">
+        <summary>Method and limitations</summary>
+        <ul id="notes"></ul>
+        <p class="field-help">This report summarizes supplied evidence. It does not certify hosted behavior or production readiness.</p>
+      </details>
+
+      <div class="panel export-panel">
+        <h2>Export this report</h2>
+        <div class="button-row">
+          <button id="copy-md" class="button-primary" type="button">Copy Markdown</button>
+          <button id="download-json" class="button-secondary" type="button">Download JSON</button>
+          <button id="download-md" class="button-secondary" type="button">Download Markdown</button>
+        </div>
+        <p id="copy-state" class="feedback-message" role="status" aria-live="polite"></p>
+        <details class="markdown-details">
+          <summary>Markdown preview</summary>
+          <label class="visually-hidden" for="markdown-preview">Markdown report preview</label>
+          <textarea id="markdown-preview" class="manifest-editor" readonly></textarea>
+        </details>
+      </div>
+    </section>
+
+    <footer id="runtime-footer">Proofline · evidence report · supplied manifests are processed in memory.</footer>
+  </main>
 </body>
 </html>
